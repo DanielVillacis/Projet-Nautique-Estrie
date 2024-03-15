@@ -65,6 +65,7 @@ flutter:
     - Assets/CREE_Logo - vert.png
     - Assets/CREE_Logo - noir.png
     - Assets/CREE_Logo - blanc.png
+    - Assets/boat-license.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -83,9 +84,11 @@ flutter:
         - asset: fonts/Poppins-Bold.ttf
           weight: 700
         - asset: fonts/Poppins-Light.ttf
-          weight: 400
+          weight: 200
         - asset: fonts/Poppins-ExtraBold.ttf
           weight: 900
+        - asset: fonts/Poppins-ExtraLight.ttf
+          weight: 100
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

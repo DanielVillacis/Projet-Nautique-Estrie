@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'add_boat.dart';
+import 'inscription.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
+class AddBoatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body: body(context),
+      body: addBoatBody(context),
       bottomNavigationBar: footer(context),
     );
   }
@@ -51,66 +49,79 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Center body(BuildContext context) {
+  Center addBoatBody(BuildContext context) {
     return Center(
       child: Container(
-        width: 240,
+        width: 300,
         margin: const EdgeInsets.only(top: 100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text(
-              'Mes Embarcations',
+              "Avez vous un permis d'embarcation ?",
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 28,
+                fontSize: 24,
                 fontWeight: FontWeight.w900,
                 fontFamily: 'Poppins-Bold',
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(
-              height: 160,
+            // Add your specific widgets for the Add Boat Page here
+            const SizedBox(height: 30),
+            Image.asset(
+              'Assets/boat-license.jpg',
+              width: 280,
             ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the addBoat.dart page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddBoatPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF18848C),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'Assets/icons/plus-large-svgrepo-com.svg',
-                    height: 20,
-                    width: 20,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Ajouter une\nembarcation',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins-Bold',
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to the page for adding a boat
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InscriptionPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF18848C),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ],
-              ),
+                  child: const Text('Oui',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w700)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to the page for adding a boat
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InscriptionPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF18848C),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text('Non',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w700)),
+                ),
+              ],
             ),
-            const SizedBox(height: 200),
+            const SizedBox(height: 90),
             Image.asset(
               'Assets/CREE_Logo - vert.png',
               width: 140,
