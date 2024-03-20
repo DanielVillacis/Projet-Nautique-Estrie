@@ -1,75 +1,91 @@
-DROP DOMAIN IF EXISTS noPermis;
+DROP DOMAIN IF EXISTS pne_id, embarcation_id cascade;
 
-CREATE DOMAIN noPermis AS VARCHAR(9)
-  CHECK (length(VALUE) = 9);
+DROP SEQUENCE IF EXISTS serial_embarcation,serial_lavage,
+    serial_embarcation_utilisateur,serial_note,serial_plan_eau cascade;
+
+DROP TYPE IF EXISTS type_lavage,niveau, type_pne_id cascade;
+
+CREATE DOMAIN pne_id AS VARCHAR(10)
+   CHECK (VALUE ~ '^[0-9]{10}$');
+CREATE DOMAIN embarcation_id as VARCHAR;
+
+CREATE SEQUENCE serial_embarcation START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE serial_lavage START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE serial_embarcation_utilisateur START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE serial_note START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE serial_plan_eau START WITH 1 INCREMENT BY 1;
+
+CREATE TYPE type_lavage AS ENUM ('eau chaude avec pression', 'eau froide avec pression', 'eau chaude sans pression, eau froide sans pression');
+CREATE TYPE niveau AS ENUM ('vert','jaune','rouge');
+CREATE TYPE type_pne_id AS ENUM ('serial_embarcation','serial_lavage',
+    'serial_embarcation_utilisateur','serial_note','serial_plan_eau','serial_mise_eau');
 
 CREATE TABLE IF NOT EXISTS Utilisateur (
    	sub VARCHAR PRIMARY KEY,
-   	prenom VARCHAR,
-   	nom VARCHAR,
-   	dateCreation TIMESTAMP NOT NULL
+   	prenom VARCHAR NOT NULL,
+   	nom VARCHAR NOT NULL,
+   	date_creation TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Embarcation (
-   	idEmbarcation serial PRIMARY KEY,
-	numeroPermis noPermis,
+   	id_embarcation embarcation_id PRIMARY KEY,
 	description VARCHAR NOT NULL,
 	marque VARCHAR(255) NOT NULL,
 	longueur INT NOT NULL,
 	photo VARCHAR(255) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS EmbarcationUtilisateur (
-   	idEmbarcation serial REFERENCES Embarcation(idEmbarcation),
+   	id_embarcation embarcation_id REFERENCES Embarcation(id_embarcation),
+   	nom VARCHAR NOT NULL,
    	sub VARCHAR REFERENCES Utilisateur(sub),
-	idEmbarcationUtilisteur serial PRIMARY KEY
+	id_embarcation_utilisateur pne_id PRIMARY KEY
 );
 CREATE TABLE IF NOT EXISTS Lavage (
-   	idEmbarcation serial REFERENCES Embarcation(idEmbarcation),
-   	typeLavage typeLavage NOT NULL,
+   	id_embarcation embarcation_id REFERENCES Embarcation(id_embarcation),
+   	type_lavage type_lavage NOT NULL,
    	date TIMESTAMP NOT NULL,
-   	selfServe boolean NOT NULL,
-	idLavage serial PRIMARY KEY
+   	self_serve boolean NOT NULL,
+	id_lavage pne_id PRIMARY KEY
 );
 CREATE TABLE IF NOT EXISTS PlanEau (
-   	niveauCouleur niveau NOT NULL,
+   	niveau_couleur niveau NOT NULL,
    	emplacement geometry(POINT) NOT NULL,
-	idPlanEau serial PRIMARY KEY
+	id_plan_eau pne_id PRIMARY KEY,
+	nom VARCHAR NOT NULL
 );
 CREATE TABLE IF NOT EXISTS NoteDossier (
-   	idEmbarcationUtilisateur serial references EmbarcationUtilisateur(idEmbarcationUtilisteur),
-	idPlanEau serial REFERENCES PlanEau(idPlanEau),
+   	id_embarcation_utilisateur pne_id references EmbarcationUtilisateur(id_embarcation_utilisateur),
+	id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau),
    	date TIMESTAMP NOT NULL,
 	note varchar NOT NULL,
-	idNote serial PRIMARY KEY
+	idNote pne_id PRIMARY KEY
 );
 CREATE TABLE IF NOT EXISTS CodeUnique (
-   	codeUnique varchar PRIMARY KEY,
-   	idPlanEau serial REFERENCES PlanEau(idPlanEau)
+   	code_unique varchar PRIMARY KEY,
+   	id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau)
 );
 
 CREATE TABLE IF NOT EXISTS Certification (
-   	idCertification serial PRIMARY KEY,
-   	nomFormation varchar NOT NULL
+   	code_certification varchar PRIMARY KEY,
+   	nom_formation varchar NOT NULL
 );
 CREATE TABLE IF NOT EXISTS EmployeCertification (
-   	idCertification serial REFERENCES Certification(idCertification),
+   	code_certification varchar REFERENCES Certification(code_certification),
    	sub VARCHAR REFERENCES Utilisateur(sub),
-	CONSTRAINT employeCerticication_pk PRIMARY KEY (sub, idCertification)
+	CONSTRAINT employeCerticication_pk PRIMARY KEY (sub, code_certification)
 );
 CREATE TABLE IF NOT EXISTS Role (
-   	nomRole VARCHAR PRIMARY KEY,
+   	nom_role VARCHAR PRIMARY KEY,
    	description VARCHAR NOT NULL
 );
 CREATE TABLE IF NOT EXISTS UtilisateurRole (
-   	nomRole VARCHAR REFERENCES Role(nomRole),
+   	nom_role VARCHAR REFERENCES Role(nom_role),
    	sub VARCHAR REFERENCES Utilisateur(sub),
-	CONSTRAINT utilisateurRole_pk PRIMARY KEY (sub, nomRole)
+	CONSTRAINT utilisateurRole_pk PRIMARY KEY (sub, nom_role)
 );
 CREATE TABLE IF NOT EXISTS MiseAEau (
-    idMiseAEau serial PRIMARY KEY,
-    date DATE,
-    idPlanEau serial REFERENCES PlanEau(idPlanEau),
-    idEmbarcationUtilisateur serial references EmbarcationUtilisateur(idEmbarcationUtilisteur)
+    id_mise_eau pne_id PRIMARY KEY,
+    date DATE NOT NULL,
+    id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau),
+    id_embarcation_utilisateur pne_id references EmbarcationUtilisateur(id_embarcation_utilisateur)
 );
-
-
