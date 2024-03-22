@@ -39,8 +39,8 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    auth0 = Auth0('{domain}',
-        '{client.id}');
+    auth0 = Auth0('dev-lmexjjh8yiz0b2mi.us.auth0.com',
+        '8GwTucxYUBqotD7WUwNueykcsb6uAR32');
     errorMessage = '';
   }
 
