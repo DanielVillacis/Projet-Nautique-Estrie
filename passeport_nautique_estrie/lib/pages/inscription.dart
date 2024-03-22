@@ -4,7 +4,10 @@ import 'home.dart';
 class InscriptionPage extends StatefulWidget {
   final String? permitNumber;
 
-  const InscriptionPage({Key? key, this.permitNumber}) : super(key: key);
+  const InscriptionPage({
+    Key? key,
+    this.permitNumber,
+  }) : super(key: key);
 
   @override
   _InscriptionPageState createState() => _InscriptionPageState();
@@ -12,13 +15,30 @@ class InscriptionPage extends StatefulWidget {
 
 class _InscriptionPageState extends State<InscriptionPage> {
   String? selectedBoatType;
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController marqueController = TextEditingController();
+  TextEditingController modeleController = TextEditingController();
+  TextEditingController longueurController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Dispose the controllers when the widget is disposed
+    descriptionController.dispose();
+    marqueController.dispose();
+    modeleController.dispose();
+    longueurController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // use the home.dart appBar function
       resizeToAvoidBottomInset: false,
-      appBar: const HomePage().appBar(context),
+      // use the home.dart appBar function
+      appBar: HomePage(
+        boatData: {},
+      ).appBar(context),
       body: inscriptionBody(context),
     );
   }
@@ -64,6 +84,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
             ),
           ],
           TextFormField(
+            controller: descriptionController,
             decoration: const InputDecoration(
               labelText: 'Description',
               labelStyle: TextStyle(
@@ -81,6 +102,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
             height: 6,
           ),
           TextFormField(
+            controller: marqueController,
             decoration: const InputDecoration(
               labelText: 'Marque',
               labelStyle: TextStyle(
@@ -98,6 +120,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
             height: 6,
           ),
           TextFormField(
+            controller: modeleController,
             decoration: const InputDecoration(
               labelText: 'Modèle',
               labelStyle: TextStyle(
@@ -115,6 +138,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
             height: 6,
           ),
           TextFormField(
+            controller: longueurController,
             decoration: const InputDecoration(
               labelText: 'Longueur',
               labelStyle: TextStyle(
@@ -161,9 +185,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
           ),
           // Add "enregistrer" button
           ElevatedButton(
-            onPressed: () {
-              // Add onPressed function
-            },
+            // on pressed, call the saveBoatData function and pass the new boat data to the home page
+            onPressed: _saveBoatData,
             style: ElevatedButton.styleFrom(
               primary: const Color(0xFF18848C),
               onPrimary: Colors.white,
@@ -186,6 +209,27 @@ class _InscriptionPageState extends State<InscriptionPage> {
           //   width: 140,
           // ),
         ]),
+      ),
+    );
+  }
+
+  void _saveBoatData() {
+    // Save boat data
+    Map<String, dynamic> boatData = {
+      'permitNumber': widget.permitNumber,
+      'description': descriptionController.text,
+      'marque': marqueController.text,
+      'modele': modeleController.text,
+      'longueur': longueurController.text,
+      'type': selectedBoatType,
+    };
+    // Navigate to the home page and pass the new boat data
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(
+          boatData: boatData,
+        ),
       ),
     );
   }

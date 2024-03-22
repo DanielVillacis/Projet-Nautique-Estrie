@@ -25,7 +25,9 @@ class _AddBoatPageState extends State<AddBoatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const HomePage().appBar(context),
+      appBar: const HomePage(
+        boatData: {},
+      ).appBar(context),
       body: addBoatBody(context),
     );
   }

@@ -1,9 +1,12 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:passeport_nautique_estrie/env_config.dart';
 import 'package:passeport_nautique_estrie/login.dart';
 import 'package:passeport_nautique_estrie/main.dart';
 import 'package:passeport_nautique_estrie/profile.dart';
 import 'package:postgres/postgres.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'pages/home.dart';
 
 class MyAppState extends State<MyApp> {
   Credentials? _credentials;
@@ -17,18 +20,13 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       title: title,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            title,
-            style: const TextStyle(color: Color(0xFF195444)), // Text color
-          ),
-          centerTitle: true, // Center the title
-        ),
         body: Center(
           child: isBusy
               ? const CircularProgressIndicator()
               : _credentials != null
-                  ? Profile(logoutAction, _credentials?.user)
+                  ? const HomePage(
+                      boatData: {},
+                    )
                   : Login(loginAction, errorMessage),
         ),
       ),
@@ -39,8 +37,8 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    auth0 = Auth0('dev-lmexjjh8yiz0b2mi.us.auth0.com',
-        '8GwTucxYUBqotD7WUwNueykcsb6uAR32');
+    auth0 = Auth0(
+        EnvironmentConfig().domain ?? '', EnvironmentConfig().clientId ?? '');
     errorMessage = '';
   }
 
@@ -66,18 +64,22 @@ class MyAppState extends State<MyApp> {
         isBusy = false;
         _credentials = credentials;
       });
-      final conn = await Connection.open(Endpoint(
-        host: 'ep-divine-dew-a56c72dk.us-east-2.aws.neon.tech',
-        port: 5432,
-        database: 'PNE',
-        username: 'PNE_owner',
-        password: 'mJz7Re5jZVdl',
-      ));
-      conn.execute(Sql.named('CALl login(@sub, @nom, @prenom)'), parameters: {
-        'sub': _credentials?.user.sub,
-        'nom': _credentials?.user.familyName,
-        'prenom': _credentials?.user.givenName
+
+      final conn = await PostgreSQLConnection(
+        EnvironmentConfig().host ?? '',
+        EnvironmentConfig().port ?? 0000,
+        EnvironmentConfig().database ?? '',
+        username: EnvironmentConfig().username ?? '',
+        password: EnvironmentConfig().password ?? '',
+      );
+      conn.execute(('CALl login(@sub, @nom, @prenom)'), substitutionValues: {
+        'sub': credentials.user.sub,
+        'nom': credentials.user.name,
+        'prenom': credentials.user.givenName,
       });
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('sub', credentials.user.sub);
     } on Exception catch (e, s) {
       debugPrint('login error: $e - stack: $s');
 

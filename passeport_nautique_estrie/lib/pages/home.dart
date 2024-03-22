@@ -1,14 +1,123 @@
 import 'package:flutter/material.dart';
 import 'add_boat.dart';
+import 'package:postgres/postgres.dart';
+import 'package:passeport_nautique_estrie/env_config.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key, required Map<String, dynamic> boatData})
+      : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+
+  PreferredSizeWidget appBar(context) {
+    return AppBar(
+      title: const Text(
+        'Accueil',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 26,
+          fontWeight: FontWeight.w200,
+          fontFamily: 'Poppins-Light',
+        ),
+      ),
+      backgroundColor: const Color(0xFF3A7667),
+      centerTitle: false,
+    );
+  }
+}
+
+class _HomePageState extends State<HomePage> {
+  final connection = PostgreSQLConnection(
+    EnvironmentConfig().host ?? '',
+    EnvironmentConfig().port ?? 0000,
+    EnvironmentConfig().database ?? '',
+    username: EnvironmentConfig().username ?? '',
+    password: EnvironmentConfig().password ?? '',
+  );
+
+  List<Map<String, dynamic>> embarcations = [];
+  List<Map<String, dynamic>> embarcationsMoq = [
+    {
+      "id_embarcation": "1",
+      "description": "Bateau à moteur",
+      "marque": "Sea-Doo",
+      "longueur": "12",
+      "photo": "Assets/sea-doo.jpg",
+    },
+    {
+      "id_embarcation": "2",
+      "description": "Voilier",
+      "marque": "Hobie Cat",
+      "longueur": "16",
+      "photo": "Assets/hobie-cat.jpg",
+    },
+    {
+      "id_embarcation": "3",
+      "description": "Kayak",
+      "marque": "Pelican",
+      "longueur": "10",
+      "photo": "Assets/pelican.jpg",
+    },
+    {
+      "id_embarcation": "4",
+      "description": "Paddle",
+      "marque": "Sea-Doo",
+      "longueur": "12",
+      "photo": "Assets/sea-doo.jpg",
+    },
+    {
+      "id_embarcation": "5",
+      "description": "Canoe",
+      "marque": "Hobie Cat",
+      "longueur": "16",
+      "photo": "Assets/hobie-cat.jpg",
+    },
+    {
+      "id_embarcation": "6",
+      "description": "Kayak",
+      "marque": "Pelican",
+      "longueur": "10",
+      "photo": "Assets/pelican.jpg",
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchEmbarcations();
+  }
+
+  Future<void> _fetchEmbarcations() async {
+    try {
+      await connection.open();
+      var results = await connection.query('SELECT * FROM Embarcation');
+      print(results); // Debugging
+      setState(() {
+        embarcations = results
+            .map((row) => {
+                  "id_embarcation": row[0],
+                  "description": row[1],
+                  "marque": row[2],
+                  "longueur": row[3],
+                  "photo": row[4],
+                  // Add other fields here
+                })
+            .toList();
+      });
+      await connection.close();
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: appBar(context),
+      appBar: const HomePage(
+        boatData: {},
+      ).appBar(context),
       drawer: drawer(context),
       body: body(context),
       bottomNavigationBar: footer(context),
@@ -34,37 +143,27 @@ class HomePage extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                // itemCount: embarcations.length,
+                itemCount: embarcationsMoq.length,
                 itemBuilder: (context, index) {
-                  // Replace 'EmbarcationItem' with your custom widget to display each item
-                  // return EmbarcationItem(embarcation: embarcations[index]);
+                  return ListTile(
+                    // add a loop to display the embarcations
+                    title: Text(embarcationsMoq[index]["description"]),
+                    subtitle: Text(embarcationsMoq[index]["marque"]),
+                    onTap: () {
+                      // Navigate to the boat details page
+                    },
+                  );
                 },
               ),
             ),
-            Image.asset(
-              'Assets/CREE_Logo - vert.png',
-              width: 140,
-            ),
-            const SizedBox(height: 10),
+            // Image.asset(
+            //   'Assets/CREE_Logo - vert.png',
+            //   width: 140,
+            // ),
+            // const SizedBox(height: 20),
           ],
         ),
       ),
-    );
-  }
-
-  AppBar appBar(context) {
-    return AppBar(
-      title: const Text(
-        'Accueil',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 26,
-          fontWeight: FontWeight.w200,
-          fontFamily: 'Poppins-Light',
-        ),
-      ),
-      backgroundColor: const Color(0xFF3A7667),
-      centerTitle: false,
     );
   }
 
@@ -91,7 +190,10 @@ class HomePage extends StatelessWidget {
               // navigate to the home page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
+                MaterialPageRoute(
+                    builder: (context) => const HomePage(
+                          boatData: {},
+                        )),
               );
             },
           ),
