@@ -25,7 +25,7 @@ class Login extends StatelessWidget {
             style: TextStyle(color: Color(0xFF08A2A8)), // Text color
           ),
         ),
-        Text(loginError ?? 'allo'),
+        Text(loginError),
       ],
     );
   }
