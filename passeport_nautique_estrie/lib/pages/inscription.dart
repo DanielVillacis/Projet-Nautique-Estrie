@@ -1,50 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'home.dart';
 
-class InscriptionPage extends StatelessWidget {
+class InscriptionPage extends StatefulWidget {
+  final String? permitNumber;
+
+  const InscriptionPage({Key? key, this.permitNumber}) : super(key: key);
+
+  @override
+  _InscriptionPageState createState() => _InscriptionPageState();
+}
+
+class _InscriptionPageState extends State<InscriptionPage> {
+  String? selectedBoatType;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      // use the home.dart appBar function
+      resizeToAvoidBottomInset: false,
+      appBar: const HomePage().appBar(context),
       body: inscriptionBody(context),
-      bottomNavigationBar: footer(context),
-    );
-  }
-
-  Container footer(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-              width: 1.0,
-              color:
-                  Colors.grey), // Adjust the border color and width as needed
-        ),
-      ),
-      child: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'Assets/icons/check-circle-svgrepo-com.svg',
-              height: 26,
-              width: 26,
-              color: const Color.fromARGB(255, 65, 65, 65),
-            ),
-            label: 'Mes Codes',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'Assets/icons/settings-svgrepo-com.svg',
-              height: 26,
-              width: 26,
-              color: const Color.fromARGB(255, 65, 65, 65),
-            ),
-            label: 'Paramètres',
-          ),
-        ],
-        // Other properties...
-        backgroundColor: const Color(0xFFF6F7E9),
-      ),
     );
   }
 
@@ -65,8 +40,29 @@ class InscriptionPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(
-            height: 16,
+            height: 10,
           ),
+          if (widget.permitNumber != null) ...[
+            const SizedBox(
+              height: 6,
+            ),
+            TextFormField(
+              initialValue: widget.permitNumber,
+              enabled: false,
+              decoration: const InputDecoration(
+                labelText: 'Numéro de permis',
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w200,
+                  fontFamily: 'Poppins-Light',
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF3A7667)),
+                ),
+              ),
+            ),
+          ],
           TextFormField(
             decoration: const InputDecoration(
               labelText: 'Description',
@@ -82,7 +78,7 @@ class InscriptionPage extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 6,
           ),
           TextFormField(
             decoration: const InputDecoration(
@@ -99,7 +95,7 @@ class InscriptionPage extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 6,
           ),
           TextFormField(
             decoration: const InputDecoration(
@@ -116,7 +112,7 @@ class InscriptionPage extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 6,
           ),
           TextFormField(
             decoration: const InputDecoration(
@@ -132,6 +128,34 @@ class InscriptionPage extends StatelessWidget {
               ),
             ),
           ),
+          DropdownButtonFormField<String>(
+            value: selectedBoatType,
+            onChanged: (value) {
+              setState(() {
+                selectedBoatType = value;
+              });
+            },
+            decoration: const InputDecoration(
+              labelText: "Type d'embarcation",
+              labelStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w200,
+                fontFamily: 'Poppins-Light',
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF3A7667)),
+              ),
+            ),
+            items: ['Kayak', 'Boat', 'Paddleboard']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+
           const SizedBox(
             height: 24,
           ),
@@ -155,58 +179,14 @@ class InscriptionPage extends StatelessWidget {
                     fontFamily: 'Poppins-Bold')),
           ),
           const SizedBox(
-            height: 90,
+            height: 80,
           ),
-          Image.asset(
-            'Assets/CREE_Logo - vert.png',
-            width: 140,
-          ),
+          // Image.asset(
+          //   'Assets/CREE_Logo - vert.png',
+          //   width: 140,
+          // ),
         ]),
       ),
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      title: const Text(
-        'Accueil',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 26,
-          fontWeight: FontWeight.w200,
-          fontFamily: 'Poppins-Light',
-        ),
-      ),
-      backgroundColor: const Color(0xFF3A7667),
-      centerTitle: false,
-      leading: GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(color: Color(0xFF3A7667)),
-            child: SvgPicture.asset(
-              'Assets/icons/menu-svgrepo-com.svg',
-              height: 30,
-              width: 30,
-              color: const Color.fromARGB(255, 31, 62, 54),
-            ),
-          )),
-      actions: [
-        GestureDetector(
-            onTap: () {},
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Color(0xFF3A7667),
-              ),
-              child: SvgPicture.asset(
-                'Assets/icons/notification-svgrepo-com.svg',
-                height: 30,
-                width: 30,
-                color: const Color.fromARGB(255, 31, 62, 54),
-              ),
-            )),
-      ],
     );
   }
 }

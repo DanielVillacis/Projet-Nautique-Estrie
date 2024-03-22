@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'add_boat.dart';
 
 class HomePage extends StatelessWidget {
@@ -8,46 +7,11 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      resizeToAvoidBottomInset: false,
+      appBar: appBar(context),
+      drawer: drawer(context),
       body: body(context),
       bottomNavigationBar: footer(context),
-    );
-  }
-
-  Container footer(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-              width: 1.0,
-              color:
-                  Colors.grey), // Adjust the border color and width as needed
-        ),
-      ),
-      child: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'Assets/icons/check-circle-svgrepo-com.svg',
-              height: 26,
-              width: 26,
-              color: const Color.fromARGB(255, 65, 65, 65),
-            ),
-            label: 'Mes Codes',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'Assets/icons/settings-svgrepo-com.svg',
-              height: 26,
-              width: 26,
-              color: const Color.fromARGB(255, 65, 65, 65),
-            ),
-            label: 'Paramètres',
-          ),
-        ],
-        // Other properties...
-        backgroundColor: const Color(0xFFF6F7E9),
-      ),
     );
   }
 
@@ -68,60 +32,27 @@ class HomePage extends StatelessWidget {
                 fontFamily: 'Poppins-Bold',
               ),
             ),
-            const SizedBox(
-              height: 160,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to the addBoat.dart page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddBoatPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF18848C),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'Assets/icons/plus-large-svgrepo-com.svg',
-                    height: 20,
-                    width: 20,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    'Ajouter une\nembarcation',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins-Bold',
-                    ),
-                  ),
-                ],
+            Expanded(
+              child: ListView.builder(
+                // itemCount: embarcations.length,
+                itemBuilder: (context, index) {
+                  // Replace 'EmbarcationItem' with your custom widget to display each item
+                  // return EmbarcationItem(embarcation: embarcations[index]);
+                },
               ),
             ),
-            const SizedBox(height: 200),
             Image.asset(
               'Assets/CREE_Logo - vert.png',
               width: 140,
             ),
+            const SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
-  AppBar appBar() {
+  AppBar appBar(context) {
     return AppBar(
       title: const Text(
         'Accueil',
@@ -134,34 +65,126 @@ class HomePage extends StatelessWidget {
       ),
       backgroundColor: const Color(0xFF3A7667),
       centerTitle: false,
-      leading: GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(color: Color(0xFF3A7667)),
-            child: SvgPicture.asset(
-              'Assets/icons/menu-svgrepo-com.svg',
-              height: 30,
-              width: 30,
-              color: const Color.fromARGB(255, 31, 62, 54),
+    );
+  }
+
+  Drawer drawer(context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Color(0xFF3A7667),
             ),
-          )),
-      actions: [
-        GestureDetector(
-            onTap: () {},
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Color(0xFF3A7667),
+            child: Text(
+              'Mon Passeport Nautique',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Poppins-Bold',
+                fontSize: 24,
               ),
-              child: SvgPicture.asset(
-                'Assets/icons/notification-svgrepo-com.svg',
-                height: 30,
-                width: 30,
-                color: const Color.fromARGB(255, 31, 62, 54),
+            ),
+          ),
+          ListTile(
+            title: const Text('Mes embarcations'),
+            onTap: () {
+              // navigate to the home page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Mes infos'),
+            onTap: () {
+              // Update navigation to handle drawer item tap
+            },
+          ),
+          ListTile(
+            title: const Text('A propos'),
+            onTap: () {
+              // Update navigation to handle drawer item tap
+            },
+          ),
+          ListTile(
+            title: const Text('Aide'),
+            onTap: () {
+              // Update navigation to handle drawer item tap
+            },
+          ),
+          ListTile(
+            title: const Text('Me déconnecter'),
+            onTap: () {
+              // Update navigation to handle drawer item tap
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container footer(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(
+              width: 1.0,
+              color:
+                  Colors.grey), // Adjust the border color and width as needed
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              // Navigate to the addBoat.dart page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddBoatPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF18848C),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
               ),
-            )),
-      ],
+            ),
+            child: const Text(
+              'Ajouter une embarcation',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins-Bold',
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Handle 'Prêter une embarcation' button tap
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF18848C),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+            child: const Text(
+              'Prêter une embarcation',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins-Bold',
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

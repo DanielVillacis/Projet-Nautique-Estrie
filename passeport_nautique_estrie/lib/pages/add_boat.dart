@@ -1,55 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'inscription.dart';
+import 'home.dart';
 
-class AddBoatPage extends StatelessWidget {
+class AddBoatPage extends StatefulWidget {
+  const AddBoatPage({Key? key}) : super(key: key);
+
+  @override
+  _AddBoatPageState createState() => _AddBoatPageState();
+}
+
+class _AddBoatPageState extends State<AddBoatPage> {
+  bool showPermitForm = false;
+  final permitController = TextEditingController();
+
+  String? permitNumber; // Add a variable to store the permit number
+
+  @override
+  void dispose() {
+    permitController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      resizeToAvoidBottomInset: false,
+      appBar: const HomePage().appBar(context),
       body: addBoatBody(context),
-      bottomNavigationBar: footer(context),
     );
   }
 
-  Container footer(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-              width: 1.0,
-              color:
-                  Colors.grey), // Adjust the border color and width as needed
-        ),
-      ),
-      child: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'Assets/icons/check-circle-svgrepo-com.svg',
-              height: 26,
-              width: 26,
-              color: const Color.fromARGB(255, 65, 65, 65),
-            ),
-            label: 'Mes Codes',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'Assets/icons/settings-svgrepo-com.svg',
-              height: 26,
-              width: 26,
-              color: const Color.fromARGB(255, 65, 65, 65),
-            ),
-            label: 'Paramètres',
-          ),
-        ],
-        // Other properties...
-        backgroundColor: const Color(0xFFF6F7E9),
-      ),
-    );
-  }
-
-  Center addBoatBody(BuildContext context) {
+  Widget addBoatBody(BuildContext context) {
     return Center(
       child: Container(
         width: 300,
@@ -58,7 +39,7 @@ class AddBoatPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text(
-              "Avez vous un permis d'embarcation ?",
+              "Avez-vous un permis d'embarcation ?",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 24,
@@ -74,54 +55,102 @@ class AddBoatPage extends StatelessWidget {
               width: 280,
             ),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the page for adding a boat
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => InscriptionPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF18848C),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+            if (!showPermitForm) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showPermitForm = true;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF18848C),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Oui',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                  child: const Text('Oui',
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const InscriptionPage(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF18848C),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Non',
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700)),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the page for adding a boat
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => InscriptionPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF18848C),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                  child: const Text('Non',
+                ],
+              ),
+            ] else ...[
+              Column(
+                children: [
+                  TextFormField(
+                    controller: permitController,
+                    decoration: const InputDecoration(
+                      labelText: 'Numéro de permis',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      permitNumber = permitController.text;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InscriptionPage(
+                            permitNumber: permitNumber,
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF18848C),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Continuer',
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 90),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 60),
             Image.asset(
               'Assets/CREE_Logo - vert.png',
               width: 140,
@@ -129,50 +158,6 @@ class AddBoatPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      title: const Text(
-        'Accueil',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 26,
-          fontWeight: FontWeight.w200,
-          fontFamily: 'Poppins-Light',
-        ),
-      ),
-      backgroundColor: const Color(0xFF3A7667),
-      centerTitle: false,
-      leading: GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(color: Color(0xFF3A7667)),
-            child: SvgPicture.asset(
-              'Assets/icons/menu-svgrepo-com.svg',
-              height: 30,
-              width: 30,
-              color: const Color.fromARGB(255, 31, 62, 54),
-            ),
-          )),
-      actions: [
-        GestureDetector(
-            onTap: () {},
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Color(0xFF3A7667),
-              ),
-              child: SvgPicture.asset(
-                'Assets/icons/notification-svgrepo-com.svg',
-                height: 30,
-                width: 30,
-                color: const Color.fromARGB(255, 31, 62, 54),
-              ),
-            )),
-      ],
     );
   }
 }
