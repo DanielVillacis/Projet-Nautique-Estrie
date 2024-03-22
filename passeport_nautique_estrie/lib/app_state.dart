@@ -4,6 +4,7 @@ import 'package:passeport_nautique_estrie/login.dart';
 import 'package:passeport_nautique_estrie/main.dart';
 import 'package:passeport_nautique_estrie/profile.dart';
 import 'package:postgres/postgres.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAppState extends State<MyApp> {
   Credentials? _credentials;
@@ -67,17 +68,22 @@ class MyAppState extends State<MyApp> {
         _credentials = credentials;
       });
       final conn = await Connection.open(Endpoint(
-        host: 'ep-divine-dew-a56c72dk.us-east-2.aws.neon.tech',
-        port: 5432,
-        database: 'PNE',
-        username: 'PNE_owner',
-        password: 'mJz7Re5jZVdl',
+        host: '*****',
+        port: 0000,
+        database: '*****',
+        username: '*****',
+        password: '*****',
       ));
       conn.execute(Sql.named('CALl login(@sub, @nom, @prenom)'), parameters: {
-        'sub': _credentials?.user.sub,
-        'nom': _credentials?.user.familyName,
-        'prenom': _credentials?.user.givenName
+        'sub': credentials.user.sub,
+        'nom': credentials.user.familyName,
+        'prenom': credentials.user.givenName
       });
+
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('sub', credentials.user.sub);
+
     } on Exception catch (e, s) {
       debugPrint('login error: $e - stack: $s');
 
