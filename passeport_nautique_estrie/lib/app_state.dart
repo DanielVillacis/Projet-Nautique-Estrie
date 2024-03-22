@@ -1,5 +1,6 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:passeport_nautique_estrie/env_config.dart';
 import 'package:passeport_nautique_estrie/login.dart';
 import 'package:passeport_nautique_estrie/main.dart';
 import 'package:passeport_nautique_estrie/profile.dart';
@@ -40,8 +41,7 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    auth0 = Auth0('{domain}',
-        '{client.id}');
+    auth0 = Auth0(EnvironmentConfig().domain?? '', EnvironmentConfig().clientId?? '');
     errorMessage = '';
   }
 
@@ -68,11 +68,11 @@ class MyAppState extends State<MyApp> {
         _credentials = credentials;
       });
       final conn = await Connection.open(Endpoint(
-        host: '*****',
-        port: 0000,
-        database: '*****',
-        username: '*****',
-        password: '*****',
+        host: EnvironmentConfig().host?? '',
+        port: EnvironmentConfig().port?? 0000,
+        database: EnvironmentConfig().database?? '',
+        username: EnvironmentConfig().username?? '',
+        password: EnvironmentConfig().password?? '',
       ));
       conn.execute(Sql.named('CALl login(@sub, @nom, @prenom)'), parameters: {
         'sub': credentials.user.sub,
@@ -83,7 +83,6 @@ class MyAppState extends State<MyApp> {
       final prefs = await SharedPreferences.getInstance();
 
       await prefs.setString('sub', credentials.user.sub);
-
     } on Exception catch (e, s) {
       debugPrint('login error: $e - stack: $s');
 
@@ -94,3 +93,4 @@ class MyAppState extends State<MyApp> {
     }
   }
 }
+
