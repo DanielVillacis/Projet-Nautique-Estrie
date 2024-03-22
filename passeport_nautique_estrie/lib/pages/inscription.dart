@@ -188,8 +188,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
             // on pressed, call the saveBoatData function and pass the new boat data to the home page
             onPressed: _saveBoatData,
             style: ElevatedButton.styleFrom(
-              primary: const Color(0xFF18848C),
-              onPrimary: Colors.white,
+              foregroundColor: Colors.white, backgroundColor: const Color(0xFF18848C),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14),
               ),

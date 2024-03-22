@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'add_boat.dart';
 import 'package:postgres/postgres.dart';
 import 'package:passeport_nautique_estrie/env_config.dart';
@@ -90,20 +91,17 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchEmbarcations() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final sub = prefs.getString('sub') ?? '0';
       await connection.open();
-      var results = await connection.query('SELECT * FROM Embarcation');
+      var results = await connection.execute(('SELECT voir_embarcation_utilisateur(@sub))'), substitutionValues: {
+        'sub': sub,
+      });
+
+
       print(results); // Debugging
-      setState(() {
-        embarcations = results
-            .map((row) => {
-                  "id_embarcation": row[0],
-                  "description": row[1],
-                  "marque": row[2],
-                  "longueur": row[3],
-                  "photo": row[4],
-                  // Add other fields here
-                })
-            .toList();
+      setState(() { 
+        embarcations = results as List<Map<String, dynamic>>;
       });
       await connection.close();
     } catch (e) {
@@ -143,12 +141,12 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: embarcationsMoq.length,
+                itemCount: embarcations.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     // add a loop to display the embarcations
-                    title: Text(embarcationsMoq[index]["description"]),
-                    subtitle: Text(embarcationsMoq[index]["marque"]),
+                    title: Text(embarcations[index]["description"]),
+                    subtitle: Text(embarcations[index]["marque"]),
                     onTap: () {
                       // Navigate to the boat details page
                     },
