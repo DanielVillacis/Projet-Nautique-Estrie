@@ -252,18 +252,6 @@ class _InscriptionPageState extends State<InscriptionPage> {
         'description':descriptionController.text
       });
       DB.closeConnection(conn);
-
-    // Map<String, dynamic> boatData = {
-    //   'permitNumber': widget.permitNumber,
-    //   'nom': nomController.text,
-    //   'description': descriptionController.text,
-    //   'marque': marqueController.text,
-    //   'modele': modeleController.text,
-    //   'longueur': longueurController.text,
-    //   'type': selectedBoatType,
-    // };
-    // Navigate to the home page and pass the new boat data
-    // ignore: use_build_context_synchronously
     Navigator.push(
       context,
       MaterialPageRoute(
