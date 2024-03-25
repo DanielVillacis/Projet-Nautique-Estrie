@@ -3,15 +3,21 @@ import 'inscription.dart';
 import 'home.dart';
 
 class AddBoatPage extends StatefulWidget {
-  const AddBoatPage({Key? key}) : super(key: key);
+  final Future<void> Function() logoutAction;
+
+  const AddBoatPage({Key? key, required this.logoutAction}) : super(key: key);
+  
 
   @override
-  _AddBoatPageState createState() => _AddBoatPageState();
+  _AddBoatPageState createState() => _AddBoatPageState(logoutAction);
 }
 
 class _AddBoatPageState extends State<AddBoatPage> {
+  final Future<void> Function() logoutAction;
   bool showPermitForm = false;
   final permitController = TextEditingController();
+
+  _AddBoatPageState(this.logoutAction, {Key? key});
 
   String? permitNumber; // Add a variable to store the permit number
 
@@ -25,8 +31,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const HomePage(
-        boatData: {},
+      appBar: HomePage( logoutAction: logoutAction,
       ).appBar(context),
       body: addBoatBody(context),
     );
@@ -88,7 +93,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const InscriptionPage(),
+                          builder: (context) => InscriptionPage(logoutAction: logoutAction,),
                         ),
                       );
                     },
@@ -128,7 +133,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => InscriptionPage(
-                            permitNumber: permitNumber,
+                            permitNumber: permitNumber, logoutAction: logoutAction,
                           ),
                         ),
                       );

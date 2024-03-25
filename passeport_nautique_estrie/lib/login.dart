@@ -7,6 +7,7 @@ class Login extends StatelessWidget {
   const Login(this.loginAction, this.loginError, {final Key? key})
       : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,9 +26,7 @@ class Login extends StatelessWidget {
             style: TextStyle(color: Color(0xFF08A2A8)), // Text color
           ),
         ),
-        Text(
-          loginError,
-        ),
+        Text(loginError,),
       ],
     );
   }

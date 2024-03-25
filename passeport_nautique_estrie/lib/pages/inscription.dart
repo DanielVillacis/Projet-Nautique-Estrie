@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:passeport_nautique_estrie/db.dart';
+import 'package:postgres/postgres.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
 class InscriptionPage extends StatefulWidget {
   final String? permitNumber;
-
+  final Future<void> Function() logoutAction;
   const InscriptionPage({
     Key? key,
     this.permitNumber,
+    required this.logoutAction,
   }) : super(key: key);
 
   @override
-  _InscriptionPageState createState() => _InscriptionPageState();
+  _InscriptionPageState createState() => _InscriptionPageState(logoutAction);
 }
 
 class _InscriptionPageState extends State<InscriptionPage> {
+  final Future<void> Function() logoutAction;
+
+  _InscriptionPageState(this.logoutAction, {Key? key});
+
   String? selectedBoatType;
+   TextEditingController nomController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController marqueController = TextEditingController();
   TextEditingController modeleController = TextEditingController();
   TextEditingController longueurController = TextEditingController();
+
 
   @override
   void dispose() {
@@ -37,7 +47,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       resizeToAvoidBottomInset: false,
       // use the home.dart appBar function
       appBar: HomePage(
-        boatData: {},
+        logoutAction: logoutAction,
       ).appBar(context),
       body: inscriptionBody(context),
     );
@@ -83,6 +93,21 @@ class _InscriptionPageState extends State<InscriptionPage> {
               ),
             ),
           ],
+          TextFormField(
+            controller: nomController,
+            decoration: const InputDecoration(
+              labelText: 'Nom',
+              labelStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w200,
+                fontFamily: 'Poppins-Light',
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFF3A7667)),
+              ),
+            ),
+          ),
           TextFormField(
             controller: descriptionController,
             decoration: const InputDecoration(
@@ -188,7 +213,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
             // on pressed, call the saveBoatData function and pass the new boat data to the home page
             onPressed: _saveBoatData,
             style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white, backgroundColor: const Color(0xFF18848C),
+              foregroundColor: Colors.white,
+              backgroundColor: const Color(0xFF18848C),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14),
               ),
@@ -212,23 +238,36 @@ class _InscriptionPageState extends State<InscriptionPage> {
     );
   }
 
-  void _saveBoatData() {
+  Future<void> _saveBoatData() async {
     // Save boat data
-    Map<String, dynamic> boatData = {
-      'permitNumber': widget.permitNumber,
-      'description': descriptionController.text,
-      'marque': marqueController.text,
-      'modele': modeleController.text,
-      'longueur': longueurController.text,
-      'type': selectedBoatType,
-    };
+    PostgreSQLConnection conn = await DB.getConnection();
+    final prefs = await SharedPreferences.getInstance();
+    final sub = prefs.getString('sub');
+    await conn
+          .execute(('call creer_embarcation(@description,@marque,@longueur,@nom,@sub)'), substitutionValues: {
+        'sub': sub,
+        'nom': nomController.text,
+        'longueur': int.parse(longueurController.text),
+        'marque': marqueController.text,
+        'description':descriptionController.text
+      });
+      DB.closeConnection(conn);
+
+    // Map<String, dynamic> boatData = {
+    //   'permitNumber': widget.permitNumber,
+    //   'nom': nomController.text,
+    //   'description': descriptionController.text,
+    //   'marque': marqueController.text,
+    //   'modele': modeleController.text,
+    //   'longueur': longueurController.text,
+    //   'type': selectedBoatType,
+    // };
     // Navigate to the home page and pass the new boat data
+    // ignore: use_build_context_synchronously
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HomePage(
-          boatData: boatData,
-        ),
+        builder: (context) => HomePage(logoutAction: logoutAction),
       ),
     );
   }

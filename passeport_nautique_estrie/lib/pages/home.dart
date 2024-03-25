@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:passeport_nautique_estrie/db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'custom_drawer.dart';
 import 'add_boat.dart';
-import 'package:postgres/postgres.dart';
-import 'package:passeport_nautique_estrie/env_config.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required Map<String, dynamic> boatData})
-      : super(key: key);
+  final Future<void> Function() logoutAction;
+
+  const HomePage({Key? key, required this.logoutAction}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(logoutAction);
 
   PreferredSizeWidget appBar(context) {
     return AppBar(
@@ -29,59 +30,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final connection = PostgreSQLConnection(
-    EnvironmentConfig().host ?? '',
-    EnvironmentConfig().port ?? 0000,
-    EnvironmentConfig().database ?? '',
-    username: EnvironmentConfig().username ?? '',
-    password: EnvironmentConfig().password ?? '',
-  );
+  final Future<void> Function() logoutAction;
 
-  List<Map<String, dynamic>> embarcations = [];
-  List<Map<String, dynamic>> embarcationsMoq = [
-    {
-      "id_embarcation": "1",
-      "description": "Bateau à moteur",
-      "marque": "Sea-Doo",
-      "longueur": "12",
-      "photo": "Assets/sea-doo.jpg",
-    },
-    {
-      "id_embarcation": "2",
-      "description": "Voilier",
-      "marque": "Hobie Cat",
-      "longueur": "16",
-      "photo": "Assets/hobie-cat.jpg",
-    },
-    {
-      "id_embarcation": "3",
-      "description": "Kayak",
-      "marque": "Pelican",
-      "longueur": "10",
-      "photo": "Assets/pelican.jpg",
-    },
-    {
-      "id_embarcation": "4",
-      "description": "Paddle",
-      "marque": "Sea-Doo",
-      "longueur": "12",
-      "photo": "Assets/sea-doo.jpg",
-    },
-    {
-      "id_embarcation": "5",
-      "description": "Canoe",
-      "marque": "Hobie Cat",
-      "longueur": "16",
-      "photo": "Assets/hobie-cat.jpg",
-    },
-    {
-      "id_embarcation": "6",
-      "description": "Kayak",
-      "marque": "Pelican",
-      "longueur": "10",
-      "photo": "Assets/pelican.jpg",
-    },
-  ];
+  _HomePageState(this.logoutAction, {Key? key});
+  
+  
+  List<List<dynamic>> embarcations = [];
 
   @override
   void initState() {
@@ -91,17 +45,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchEmbarcations() async {
     try {
+      final connection = await DB.getConnection();
       final prefs = await SharedPreferences.getInstance();
-      final sub = prefs.getString('sub') ?? '0';
-      await connection.open();
-      var results = await connection.execute(('SELECT voir_embarcation_utilisateur(@sub))'), substitutionValues: {
-        'sub': sub,
-      });
-
-
-      print(results); // Debugging
-      setState(() { 
-        embarcations = results as List<Map<String, dynamic>>;
+      final sub = prefs.getString('sub');
+      var results = await connection.query(
+          "SELECT * from voir_embarcation_utilisateur(@sub)",
+          substitutionValues: {"sub": sub});
+      setState(() {
+        embarcations = results;
       });
       await connection.close();
     } catch (e) {
@@ -113,10 +64,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const HomePage(
-        boatData: {},
-      ).appBar(context),
-      drawer: drawer(context),
+      appBar: HomePage(logoutAction: logoutAction).appBar(context),
+      drawer: CustomDrawer(
+        onEmbarcationsTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(logoutAction: logoutAction).appBar(context)),
+          );
+        }, logoutAction: logoutAction,
+        
+      ),
       body: body(context),
       bottomNavigationBar: footer(context),
     );
@@ -125,7 +82,7 @@ class _HomePageState extends State<HomePage> {
   Center body(BuildContext context) {
     return Center(
       child: Container(
-        width: 240,
+        width: 400,
         margin: const EdgeInsets.only(top: 100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -140,13 +97,21 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // Display two items per row
+                  mainAxisSpacing: 10.0, // Spacing between rows
+                  crossAxisSpacing: 10.0, // Spacing between columns
+                ),
                 itemCount: embarcations.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     // add a loop to display the embarcations
-                    title: Text(embarcations[index]["description"]),
-                    subtitle: Text(embarcations[index]["marque"]),
+                    title: Image.network(
+                      embarcations[index][0],
+                      height: double.infinity,
+                    ),
+                    subtitle: Text(embarcations[index][1]),
                     onTap: () {
                       // Navigate to the boat details page
                     },
@@ -165,64 +130,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Drawer drawer(context) {
-    return Drawer(
-      child: ListView(
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Color(0xFF3A7667),
-            ),
-            child: Text(
-              'Mon Passeport Nautique',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Poppins-Bold',
-                fontSize: 24,
-              ),
-            ),
-          ),
-          ListTile(
-            title: const Text('Mes embarcations'),
-            onTap: () {
-              // navigate to the home page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const HomePage(
-                          boatData: {},
-                        )),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('Mes infos'),
-            onTap: () {
-              // Update navigation to handle drawer item tap
-            },
-          ),
-          ListTile(
-            title: const Text('A propos'),
-            onTap: () {
-              // Update navigation to handle drawer item tap
-            },
-          ),
-          ListTile(
-            title: const Text('Aide'),
-            onTap: () {
-              // Update navigation to handle drawer item tap
-            },
-          ),
-          ListTile(
-            title: const Text('Me déconnecter'),
-            onTap: () {
-              // Update navigation to handle drawer item tap
-            },
-          ),
-        ],
-      ),
-    );
-  }
 
   Container footer(BuildContext context) {
     return Container(
@@ -242,7 +149,7 @@ class _HomePageState extends State<HomePage> {
               // Navigate to the addBoat.dart page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AddBoatPage()),
+                MaterialPageRoute(builder: (context) => AddBoatPage(logoutAction: logoutAction,)),
               );
             },
             style: ElevatedButton.styleFrom(

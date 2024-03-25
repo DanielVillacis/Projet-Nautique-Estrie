@@ -3,8 +3,18 @@ import 'package:postgres/postgres.dart';
 
 class DB {
   static Future<PostgreSQLConnection> getConnection() async {
-    return await PostgreSQLConnection(
-        'ep-divine-dew-a56c72dk.us-east-2.aws.neon.tech/PNE?sslmode=require', 5432, 'PNE',
-        username: 'PNE_owner', password: 'mJz7Re5jZVdl');
+    var conn = PostgreSQLConnection(
+        EnvironmentConfig().host ?? '',
+        EnvironmentConfig().port ?? 0000,
+        EnvironmentConfig().database ?? '',
+        username: EnvironmentConfig().username ?? '',
+        password: EnvironmentConfig().password ?? '',
+        useSSL: true,
+      );
+      await conn.open();
+      return conn;
+  }
+  static void closeConnection(PostgreSQLConnection conn) async {
+   conn.close();
   }
 }
