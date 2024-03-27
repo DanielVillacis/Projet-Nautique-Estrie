@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:passeport_nautique_estrie/app_state.dart';
 import 'package:passeport_nautique_estrie/pages/home.dart';
 
 class CustomDrawer extends StatelessWidget {

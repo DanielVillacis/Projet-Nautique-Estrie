@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passeport_nautique_estrie/db.dart';
+import 'package:passeport_nautique_estrie/pages/embarcation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'custom_drawer.dart';
 import 'add_boat.dart';
@@ -33,8 +34,7 @@ class _HomePageState extends State<HomePage> {
   final Future<void> Function() logoutAction;
 
   _HomePageState(this.logoutAction, {Key? key});
-  
-  
+
   List<List<dynamic>> embarcations = [];
 
   @override
@@ -69,10 +69,12 @@ class _HomePageState extends State<HomePage> {
         onEmbarcationsTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePage(logoutAction: logoutAction).appBar(context)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomePage(logoutAction: logoutAction).appBar(context)),
           );
-        }, logoutAction: logoutAction,
-        
+        },
+        logoutAction: logoutAction,
       ),
       body: body(context),
       bottomNavigationBar: footer(context),
@@ -113,7 +115,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     subtitle: Text(embarcations[index][1]),
                     onTap: () {
-                      // Navigate to the boat details page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DetailsEmbarcation(
+                                  logoutAction: logoutAction,
+                                  embarcationUtilisateur: embarcations[index][3],
+                                )),
+                      );
                     },
                   );
                 },
@@ -129,7 +138,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 
   Container footer(BuildContext context) {
     return Container(
@@ -149,7 +157,10 @@ class _HomePageState extends State<HomePage> {
               // Navigate to the addBoat.dart page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddBoatPage(logoutAction: logoutAction,)),
+                MaterialPageRoute(
+                    builder: (context) => AddBoatPage(
+                          logoutAction: logoutAction,
+                        )),
               );
             },
             style: ElevatedButton.styleFrom(
