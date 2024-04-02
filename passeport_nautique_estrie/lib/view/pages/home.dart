@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:passeport_nautique_estrie/db.dart';
-import 'package:passeport_nautique_estrie/pages/embarcation.dart';
+import 'package:passeport_nautique_estrie/view/pages/embarcation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'custom_drawer.dart';
 import 'add_boat.dart';
+import 'package:passeport_nautique_estrie/controller/home_controller.dart';
 
 class HomePage extends StatefulWidget {
   final Future<void> Function() logoutAction;
@@ -36,29 +36,22 @@ class _HomePageState extends State<HomePage> {
   _HomePageState(this.logoutAction, {Key? key});
 
   List<List<dynamic>> embarcations = [];
+  final controller = HomeController();
 
   @override
   void initState() {
     super.initState();
-    _fetchEmbarcations();
+    fetchData();
   }
 
-  Future<void> _fetchEmbarcations() async {
-    try {
-      final connection = await DB.getConnection();
+  fetchData() async {
       final prefs = await SharedPreferences.getInstance();
       final sub = prefs.getString('sub');
-      var results = await connection.query(
-          "SELECT * from voir_embarcation_utilisateur(@sub)",
-          substitutionValues: {"sub": sub});
+      var results = await controller.getEmbarcations(sub);
       setState(() {
         embarcations = results;
       });
-      await connection.close();
-    } catch (e) {
-      print("Error fetching data: $e");
     }
-  }
 
   @override
   Widget build(BuildContext context) {

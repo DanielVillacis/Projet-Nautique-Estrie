@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:passeport_nautique_estrie/db.dart';
-import 'package:postgres/postgres.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
+import 'package:passeport_nautique_estrie/controller/inscription_controller.dart';
 
 class InscriptionPage extends StatefulWidget {
   final String? permitNumber;
@@ -19,6 +17,7 @@ class InscriptionPage extends StatefulWidget {
 
 class _InscriptionPageState extends State<InscriptionPage> {
   final Future<void> Function() logoutAction;
+  final controller = InscriptionController();
 
   _InscriptionPageState(this.logoutAction, {Key? key});
 
@@ -240,18 +239,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
   Future<void> _saveBoatData() async {
     // Save boat data
-    PostgreSQLConnection conn = await DB.getConnection();
-    final prefs = await SharedPreferences.getInstance();
-    final sub = prefs.getString('sub');
-    await conn
-          .execute(('call creer_embarcation(@description,@marque,@longueur,@nom,@sub)'), substitutionValues: {
-        'sub': sub,
-        'nom': nomController.text,
-        'longueur': int.parse(longueurController.text),
-        'marque': marqueController.text,
-        'description':descriptionController.text
-      });
-      DB.closeConnection(conn);
+    controller.updateBoatData(
+      nomController.text,
+      descriptionController.text,
+      marqueController.text,
+      modeleController.text,
+      longueurController.text,
+      selectedBoatType!,
+    );
     Navigator.push(
       context,
       MaterialPageRoute(

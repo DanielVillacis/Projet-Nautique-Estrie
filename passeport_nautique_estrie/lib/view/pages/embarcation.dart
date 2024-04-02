@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:passeport_nautique_estrie/db.dart';
-import 'package:passeport_nautique_estrie/pages/add_boat.dart';
-import 'package:passeport_nautique_estrie/pages/custom_drawer.dart';
+import 'package:passeport_nautique_estrie/view/pages/add_boat.dart';
+import 'package:passeport_nautique_estrie/view/pages/custom_drawer.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:passeport_nautique_estrie/controller/embarcation_controller.dart';
+import 'package:passeport_nautique_estrie/model/embarcation_model.dart';
 
 class DetailsEmbarcation extends StatefulWidget {
   final Future<void> Function() logoutAction;
@@ -39,36 +40,16 @@ class DetailsEmbarcation extends StatefulWidget {
 class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
   final Future<void> Function() logoutAction;
   final String embarcationUtilisateur;
+  final EmbarcationModel model;
+  final EmbarcationController controller;
 
-  _DetailsEmbarcationState(this.logoutAction, this.embarcationUtilisateur);
+  _DetailsEmbarcationState(this.logoutAction, this.embarcationUtilisateur)
+      : model = EmbarcationModel(embarcationUtilisateur),
+        controller = EmbarcationController(embarcationUtilisateur) {
+    controller.fetchDetails();
+        }
 
   List<List<dynamic>> details = [];
-
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchDetailsEmbarcations();
-  }
-
-  Future<void> _fetchDetailsEmbarcations() async {
-    try {
-      final connection = await DB.getConnection();
-      var results = await connection.query(
-        "select * from voir_details_embarcation(@eu)",
-        substitutionValues: {"eu": embarcationUtilisateur},
-      );
-      setState(() {
-        details = results;
-         _isLoading = false;
-      });
-      await connection.close();
-    } catch (e) {
-      print("Error fetching data: $e");
-      _isLoading = false;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +73,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
         },
         logoutAction: logoutAction,
       ),
-      body: _isLoading ? _buildLoadingIndicator() : body(),
+      body: model.isLoading ? _buildLoadingIndicator() : body(),
       bottomNavigationBar: footer(context),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:passeport_nautique_estrie/pages/home.dart';
+import 'package:passeport_nautique_estrie/view/pages/home.dart';
 
 class CustomDrawer extends StatelessWidget {
   final VoidCallback? onEmbarcationsTap;

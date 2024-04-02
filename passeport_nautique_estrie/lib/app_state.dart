@@ -6,7 +6,7 @@ import 'package:passeport_nautique_estrie/login.dart';
 import 'package:passeport_nautique_estrie/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'pages/home.dart';
+import 'view/pages/home.dart';
 
 class MyAppState extends State<MyApp> {
   Credentials? _credentials;

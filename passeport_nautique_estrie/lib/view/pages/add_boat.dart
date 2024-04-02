@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:passeport_nautique_estrie/controller/add_boat_controller.dart';
 import 'inscription.dart';
 import 'home.dart';
 
@@ -16,10 +17,9 @@ class _AddBoatPageState extends State<AddBoatPage> {
   final Future<void> Function() logoutAction;
   bool showPermitForm = false;
   final permitController = TextEditingController();
+  final controller = AddBoatController();
 
   _AddBoatPageState(this.logoutAction, {Key? key});
-
-  String? permitNumber; // Add a variable to store the permit number
 
   @override
   void dispose() {
@@ -128,12 +128,12 @@ class _AddBoatPageState extends State<AddBoatPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      permitNumber = permitController.text;
+                      controller.updatePermitNumber(permitController.text);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => InscriptionPage(
-                            permitNumber: permitNumber, logoutAction: logoutAction,
+                            permitNumber: controller.getPermitNumber(), logoutAction: logoutAction,
                           ),
                         ),
                       );
