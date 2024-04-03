@@ -6,7 +6,7 @@ class EmbarcationController {
   EmbarcationController(String embarcationUtilisateur)
       : model = EmbarcationModel(embarcationUtilisateur);
 
-  void fetchDetails() {
-    model.fetchDetailsEmbarcations();
+  Future<void> fetchDetails() async {
+    await model.fetchDetailsEmbarcations();
   }
 }

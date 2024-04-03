@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                     // add a loop to display the embarcations
                     title: Image.network(
                       embarcations[index][0],
-                      height: double.infinity,
+                      height: 140,
                     ),
                     subtitle: Text(embarcations[index][1]),
                     onTap: () {
