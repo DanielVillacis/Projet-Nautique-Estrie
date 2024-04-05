@@ -43,7 +43,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // use the home.dart appBar function
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       // use the home.dart appBar function
       appBar: HomePage(
         logoutAction: logoutAction,
@@ -224,10 +224,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Poppins-Bold')),
-          ),
-          const SizedBox(
-            height: 80,
-          ),
+          )
           // Image.asset(
           //   'Assets/CREE_Logo - vert.png',
           //   width: 140,

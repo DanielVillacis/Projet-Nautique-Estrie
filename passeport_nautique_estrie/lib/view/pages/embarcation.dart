@@ -54,7 +54,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: DetailsEmbarcation(
         logoutAction: logoutAction,
         embarcationUtilisateur: embarcationUtilisateur,

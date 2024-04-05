@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: HomePage(logoutAction: logoutAction).appBar(context),
       drawer: CustomDrawer(
         onEmbarcationsTap: () {
