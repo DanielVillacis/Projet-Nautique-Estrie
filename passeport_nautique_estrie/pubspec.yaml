@@ -35,12 +35,17 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  auth0_flutter: ^1.6.0
   postgres: ^2.4.3
   shared_preferences: ^2.2.2
   flutter_dotenv: ^5.1.0
   flutter_svg: ^2.0.10+1
   qr_flutter: ^4.1.0
+  firebase_auth: ^4.17.8
+  firebase_core: ^2.27.0
+  google_sign_in: ^6.2.1
+  get: ^4.6.6
+  firebase_storage: ^11.6.9
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -70,10 +75,11 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - .env
-    - Assets/CREE_Logo - vert.png
-    - Assets/CREE_Logo - noir.png
-    - Assets/CREE_Logo - blanc.png
-    - Assets/boat-license.jpg
+    - assets/CREE_Logo - vert.png
+    - assets/CREE_Logo - noir.png
+    - assets/CREE_Logo - blanc.png
+    - assets/boat-license.jpg
+    - assets/google_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

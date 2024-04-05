@@ -4,22 +4,20 @@ import 'inscription.dart';
 import 'home.dart';
 
 class AddBoatPage extends StatefulWidget {
-  final Future<void> Function() logoutAction;
-
-  const AddBoatPage({Key? key, required this.logoutAction}) : super(key: key);
-  
+  const AddBoatPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _AddBoatPageState createState() => _AddBoatPageState(logoutAction);
+  _AddBoatPageState createState() => _AddBoatPageState();
 }
 
 class _AddBoatPageState extends State<AddBoatPage> {
-  final Future<void> Function() logoutAction;
   bool showPermitForm = false;
   final permitController = TextEditingController();
   final controller = AddBoatController();
 
-  _AddBoatPageState(this.logoutAction, {Key? key});
+  _AddBoatPageState({Key? key});
 
   @override
   void dispose() {
@@ -30,9 +28,8 @@ class _AddBoatPageState extends State<AddBoatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const HomePage().appBar(context),
       resizeToAvoidBottomInset: true,
-      appBar: HomePage( logoutAction: logoutAction,
-      ).appBar(context),
       body: addBoatBody(context),
     );
   }
@@ -93,7 +90,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => InscriptionPage(logoutAction: logoutAction,),
+                          builder: (context) => const InscriptionPage(),
                         ),
                       );
                     },
@@ -133,7 +130,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => InscriptionPage(
-                            permitNumber: controller.getPermitNumber(), logoutAction: logoutAction,
+                            permitNumber: controller.getPermitNumber(),
                           ),
                         ),
                       );

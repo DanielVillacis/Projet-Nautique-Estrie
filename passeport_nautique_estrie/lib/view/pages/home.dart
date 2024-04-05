@@ -1,4 +1,9 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:passeport_nautique_estrie/services/firebase_storage_service.dart';
 import 'package:passeport_nautique_estrie/view/pages/embarcation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'custom_drawer.dart';
@@ -6,12 +11,10 @@ import 'add_boat.dart';
 import 'package:passeport_nautique_estrie/controller/home_controller.dart';
 
 class HomePage extends StatefulWidget {
-  final Future<void> Function() logoutAction;
-
-  const HomePage({Key? key, required this.logoutAction}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState(logoutAction);
+  _HomePageState createState() => _HomePageState();
 
   PreferredSizeWidget appBar(context) {
     return AppBar(
@@ -31,9 +34,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final Future<void> Function() logoutAction;
-
-  _HomePageState(this.logoutAction, {Key? key});
+  _HomePageState({Key? key});
 
   List<List<dynamic>> embarcations = [];
   final controller = HomeController();
@@ -45,29 +46,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   fetchData() async {
-      final prefs = await SharedPreferences.getInstance();
-      final sub = prefs.getString('sub');
-      var results = await controller.getEmbarcations(sub);
-      setState(() {
-        embarcations = results;
-      });
-    }
+    final prefs = await SharedPreferences.getInstance();
+    final sub = prefs.getString('sub');
+    var results = await controller.getEmbarcations(sub);
+    setState(() {
+      embarcations = results;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: HomePage(logoutAction: logoutAction).appBar(context),
+      appBar: widget.appBar(context),
       drawer: CustomDrawer(
         onEmbarcationsTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    HomePage(logoutAction: logoutAction).appBar(context)),
+            MaterialPageRoute(builder: (context) => widget.appBar(context)),
           );
         },
-        logoutAction: logoutAction,
       ),
       body: body(context),
       bottomNavigationBar: footer(context),
@@ -75,62 +73,73 @@ class _HomePageState extends State<HomePage> {
   }
 
   Center body(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 400,
-        margin: const EdgeInsets.only(top: 100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Text(
-              'Mes Embarcations',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Poppins-Bold',
-              ),
+  return Center(
+    child: Container(
+      width: 400,
+      margin: const EdgeInsets.only(top: 100),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            'Mes Embarcations',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Poppins-Bold',
             ),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Display two items per row
-                  mainAxisSpacing: 10.0, // Spacing between rows
-                  crossAxisSpacing: 10.0, // Spacing between columns
-                ),
-                itemCount: embarcations.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    // add a loop to display the embarcations
-                    title: Image.network(
-                      embarcations[index][0],
-                      height: 140,
-                    ),
-                    subtitle: Text(embarcations[index][1]),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailsEmbarcation(
-                                  logoutAction: logoutAction,
-                                  embarcationUtilisateur: embarcations[index][3],
-                                )),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Display two items per row
+                mainAxisSpacing: 10.0, // Spacing between rows
+                crossAxisSpacing: 10.0, // Spacing between columns
+              ),
+              itemCount: embarcations.length,
+              itemBuilder: (context, index) {
+                return FutureBuilder<String?>(
+                  future: Get.put(FirebaseStorageService()).getImage(embarcations[index][0]),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // While waiting for the future to complete, return a loading indicator
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      // If an error occurs while fetching the image, display an error message
+                      return Text('Error loading image');
+                    } else {
+                      // If the future completes successfully, display the image
+                      final imgUrl = snapshot.data;
+                      return ListTile(
+                        // add a loop to display the embarcations
+                        title: Image.network(
+                          imgUrl!,
+                          height: 140,
+                        ),
+                        subtitle: Text(embarcations[index][1]),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsEmbarcation(
+                                embarcationUtilisateur: embarcations[index][3],
+                              ),
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                },
-              ),
+                    }
+                  },
+                );
+              },
             ),
-            // Image.asset(
-            //   'Assets/CREE_Logo - vert.png',
-            //   width: 140,
-            // ),
-            // const SizedBox(height: 20),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Container footer(BuildContext context) {
     return Container(
@@ -150,10 +159,7 @@ class _HomePageState extends State<HomePage> {
               // Navigate to the addBoat.dart page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => AddBoatPage(
-                          logoutAction: logoutAction,
-                        )),
+                MaterialPageRoute(builder: (context) => const AddBoatPage()),
               );
             },
             style: ElevatedButton.styleFrom(
