@@ -81,63 +81,82 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Center body(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 400,
-        margin: const EdgeInsets.only(top: 100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Text(
-              'Mes Embarcations',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Poppins-Bold',
-              ),
+Center body(BuildContext context) {
+  return Center(
+    child: Container(
+      width: 350,
+      margin: const EdgeInsets.only(top: 60),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            'Mes Embarcations',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Poppins-Bold',
             ),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Display two items per row
-                  mainAxisSpacing: 10.0, // Spacing between rows
-                  crossAxisSpacing: 10.0, // Spacing between columns
-                ),
-                itemCount: embarcations.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    // add a loop to display the embarcations
-                    title: Image.network(
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: embarcations.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Color.fromARGB(255, 87, 87, 87), // Light gray color
+                        width: 0.2, // Adjust the width as needed
+                      ),
+                    ),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Nom:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(embarcations[index][1]),
+                      ],
+                    ),
+                    trailing: Image.network(
                       embarcations[index][0],
                       height: double.infinity,
                     ),
-                    subtitle: Text(embarcations[index][1]),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DetailsEmbarcation(
-                                  logoutAction: logoutAction,
-                                  embarcationUtilisateur: embarcations[index][3],
-                                )),
+                          builder: (context) => DetailsEmbarcation(
+                            logoutAction: logoutAction,
+                            embarcationUtilisateur: embarcations[index][3],
+                          ),
+                        ),
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-            // Image.asset(
-            //   'Assets/CREE_Logo - vert.png',
-            //   width: 140,
-            // ),
-            // const SizedBox(height: 20),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+
+
 
   Container footer(BuildContext context) {
     return Container(

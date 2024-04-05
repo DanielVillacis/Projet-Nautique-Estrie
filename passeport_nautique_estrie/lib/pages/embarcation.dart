@@ -107,7 +107,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
     return SingleChildScrollView(
       child: Center(
         child: Container(
-          width: 400,
+          width: 260,
           margin: const EdgeInsets.only(top: 50),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -118,7 +118,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 28,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   fontFamily: 'Poppins-Bold',
                 ),
               ),
@@ -139,6 +139,9 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 12,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -153,11 +156,11 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
                   const SizedBox(height: 8), // Add spacing between fields
                 ],
               ),
-              const SizedBox(height: 8), // Add spacing between fields and image
+              const SizedBox(height: 10), // Add spacing between fields and image
               Image.network(
                 details[0][4],
-                width: 300, // Adjust the width of the image as needed
-                height: 300, // Adjust the height of the image as needed
+                width: 220, // Adjust the width of the image as needed
+                height: 160, // Adjust the height of the image as needed
                 fit: BoxFit.cover, // Adjust the fit of the image as needed
               ),
               const SizedBox(height: 20),
