@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:passeport_nautique_estrie/login.dart';
 import 'package:passeport_nautique_estrie/view/pages/home.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -57,7 +59,16 @@ class CustomDrawer extends StatelessWidget {
               // Update navigation to handle drawer item tap
             },
           ),
-          ListTile(title: const Text('Me déconnecter'), onTap: () async {}),
+          ListTile(
+            title: const Text('Me déconnecter'),
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Login()),
+              );
+            },
+          ),
         ],
       ),
     );
