@@ -1,4 +1,9 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:passeport_nautique_estrie/services/firebase_storage_service.dart';
 import 'package:passeport_nautique_estrie/view/pages/embarcation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'custom_drawer.dart';
@@ -68,57 +73,73 @@ class _HomePageState extends State<HomePage> {
   }
 
   Center body(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 400,
-        margin: const EdgeInsets.only(top: 100),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Text(
-              'Mes Embarcations',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Poppins-Bold',
-              ),
+  return Center(
+    child: Container(
+      width: 400,
+      margin: const EdgeInsets.only(top: 100),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            'Mes Embarcations',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Poppins-Bold',
             ),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Display two items per row
-                  mainAxisSpacing: 10.0, // Spacing between rows
-                  crossAxisSpacing: 10.0, // Spacing between columns
-                ),
-                itemCount: embarcations.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    // add a loop to display the embarcations
-                    title: Image.network(
-                      embarcations[index][0],
-                      height: 140,
-                    ),
-                    subtitle: Text(embarcations[index][1]),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailsEmbarcation(
-                                  embarcationUtilisateur: embarcations[index]
-                                      [3],
-                                )),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Display two items per row
+                mainAxisSpacing: 10.0, // Spacing between rows
+                crossAxisSpacing: 10.0, // Spacing between columns
+              ),
+              itemCount: embarcations.length,
+              itemBuilder: (context, index) {
+                return FutureBuilder<String?>(
+                  future: Get.put(FirebaseStorageService()).getImage(embarcations[index][0]),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // While waiting for the future to complete, return a loading indicator
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      // If an error occurs while fetching the image, display an error message
+                      return Text('Error loading image');
+                    } else {
+                      // If the future completes successfully, display the image
+                      final imgUrl = snapshot.data;
+                      return ListTile(
+                        // add a loop to display the embarcations
+                        title: Image.network(
+                          imgUrl!,
+                          height: 140,
+                        ),
+                        subtitle: Text(embarcations[index][1]),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsEmbarcation(
+                                embarcationUtilisateur: embarcations[index][3],
+                              ),
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                },
-              ),
+                    }
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Container footer(BuildContext context) {
     return Container(

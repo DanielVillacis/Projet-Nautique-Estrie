@@ -43,6 +43,9 @@ dependencies:
   firebase_auth: ^4.17.8
   firebase_core: ^2.27.0
   google_sign_in: ^6.2.1
+  get: ^4.6.6
+  firebase_storage: ^11.6.9
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -72,10 +75,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - .env
-    - Assets/CREE_Logo - vert.png
-    - Assets/CREE_Logo - noir.png
-    - Assets/CREE_Logo - blanc.png
-    - Assets/boat-license.jpg
+    - assets/CREE_Logo - vert.png
+    - assets/CREE_Logo - noir.png
+    - assets/CREE_Logo - blanc.png
+    - assets/boat-license.jpg
     - assets/google_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
