@@ -21,11 +21,21 @@ class MyAppState extends State<MyApp> {
       title: title,
       home: Scaffold(
         body: Center(
-          child: isBusy
-              ? const CircularProgressIndicator()
-              : _credentials != null
-                  ? HomePage(logoutAction: logoutAction)
-                  : Login(loginAction, errorMessage),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Place your login widget here
+              Login(
+                onNavigateToHomePage: () {
+                  // Navigation logic to the HomePage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -40,48 +50,11 @@ class MyAppState extends State<MyApp> {
     errorMessage = '';
   }
 
-  Future<void> logoutAction() async {
-    await auth0.webAuthentication(scheme: appScheme).logout();
+  // Future<void> logoutAction() async {
+  //   await auth0.webAuthentication(scheme: appScheme).logout();
 
-    setState(() {
-      _credentials = null;
-    });
-  }
-
-  Future<void> loginAction() async {
-    setState(() {
-      isBusy = true;
-      errorMessage = '';
-    });
-
-    try {
-      final Credentials credentials =
-          await auth0.webAuthentication(scheme: appScheme).login();
-      setState(() {
-        isBusy = false;
-        _credentials = credentials;
-      });
-
-      final conn = await DB.getConnection();
-      await conn
-          .execute(('CALl login(@sub, @nom, @prenom)'), substitutionValues: {
-        'sub': credentials.user.sub,
-        'nom': credentials.user.name,
-        'prenom': credentials.user.givenName,
-      });
-      DB.closeConnection(conn);
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('sub', credentials.user.sub);
-      await prefs.setString('prenom', credentials.user.givenName ?? 'n/a');
-      await prefs.setString('nom', credentials.user.familyName ?? 'n/a');
-    } on Exception catch (e, s) {
-      debugPrint('login error: $e - stack: $s');
-
-      setState(() {
-        isBusy = false;
-        errorMessage = e.toString();
-      });
-    }
-  }
+  //   setState(() {
+  //     _credentials = null;
+  //   });
+  // }
 }

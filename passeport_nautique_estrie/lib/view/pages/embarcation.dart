@@ -7,18 +7,16 @@ import 'package:passeport_nautique_estrie/controller/embarcation_controller.dart
 import 'package:passeport_nautique_estrie/model/embarcation_model.dart';
 
 class DetailsEmbarcation extends StatefulWidget {
-  final Future<void> Function() logoutAction;
   final String embarcationUtilisateur;
 
   const DetailsEmbarcation(
       {Key? key,
-      required this.logoutAction,
       required this.embarcationUtilisateur})
       : super(key: key);
 
   @override
   _DetailsEmbarcationState createState() =>
-      _DetailsEmbarcationState(logoutAction, embarcationUtilisateur);
+      _DetailsEmbarcationState(embarcationUtilisateur);
 
   PreferredSizeWidget appBar(context) {
     return AppBar(
@@ -38,12 +36,11 @@ class DetailsEmbarcation extends StatefulWidget {
 }
 
 class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
-  final Future<void> Function() logoutAction;
   final String embarcationUtilisateur;
   final EmbarcationModel model;
   final EmbarcationController controller;
 
-  _DetailsEmbarcationState(this.logoutAction, this.embarcationUtilisateur)
+  _DetailsEmbarcationState(this.embarcationUtilisateur)
       : model = EmbarcationModel(embarcationUtilisateur),
         controller = EmbarcationController(embarcationUtilisateur) {
     controller.fetchDetails();
@@ -56,7 +53,6 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: DetailsEmbarcation(
-        logoutAction: logoutAction,
         embarcationUtilisateur: embarcationUtilisateur,
       ).appBar(context),
       drawer: CustomDrawer(
@@ -65,13 +61,11 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
             context,
             MaterialPageRoute(
               builder: (context) => DetailsEmbarcation(
-                logoutAction: logoutAction,
                 embarcationUtilisateur: embarcationUtilisateur,
               ).appBar(context),
             ),
           );
         },
-        logoutAction: logoutAction,
       ),
       body: model.isLoading ? _buildLoadingIndicator() : body(),
       bottomNavigationBar: footer(context),
@@ -203,8 +197,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => AddBoatPage(
-                          logoutAction: logoutAction,
+                    builder: (context) => const AddBoatPage(
                         )),
               );
             },

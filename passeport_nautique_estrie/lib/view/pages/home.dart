@@ -6,12 +6,10 @@ import 'add_boat.dart';
 import 'package:passeport_nautique_estrie/controller/home_controller.dart';
 
 class HomePage extends StatefulWidget {
-  final Future<void> Function() logoutAction;
-
-  const HomePage({Key? key, required this.logoutAction}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState(logoutAction);
+  _HomePageState createState() => _HomePageState();
 
   PreferredSizeWidget appBar(context) {
     return AppBar(
@@ -31,9 +29,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final Future<void> Function() logoutAction;
-
-  _HomePageState(this.logoutAction, {Key? key});
+  _HomePageState({Key? key});
 
   List<List<dynamic>> embarcations = [];
   final controller = HomeController();
@@ -45,29 +41,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   fetchData() async {
-      final prefs = await SharedPreferences.getInstance();
-      final sub = prefs.getString('sub');
-      var results = await controller.getEmbarcations(sub);
-      setState(() {
-        embarcations = results;
-      });
-    }
+    final prefs = await SharedPreferences.getInstance();
+    final sub = prefs.getString('sub');
+    var results = await controller.getEmbarcations(sub);
+    setState(() {
+      embarcations = results;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: HomePage(logoutAction: logoutAction).appBar(context),
+      appBar: widget.appBar(context),
       drawer: CustomDrawer(
         onEmbarcationsTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    HomePage(logoutAction: logoutAction).appBar(context)),
+            MaterialPageRoute(builder: (context) => widget.appBar(context)),
           );
         },
-        logoutAction: logoutAction,
       ),
       body: body(context),
       bottomNavigationBar: footer(context),
@@ -112,8 +105,8 @@ class _HomePageState extends State<HomePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => DetailsEmbarcation(
-                                  logoutAction: logoutAction,
-                                  embarcationUtilisateur: embarcations[index][3],
+                                  embarcationUtilisateur: embarcations[index]
+                                      [3],
                                 )),
                       );
                     },
@@ -121,11 +114,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            // Image.asset(
-            //   'Assets/CREE_Logo - vert.png',
-            //   width: 140,
-            // ),
-            // const SizedBox(height: 20),
           ],
         ),
       ),
@@ -150,10 +138,7 @@ class _HomePageState extends State<HomePage> {
               // Navigate to the addBoat.dart page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => AddBoatPage(
-                          logoutAction: logoutAction,
-                        )),
+                MaterialPageRoute(builder: (context) => const AddBoatPage()),
               );
             },
             style: ElevatedButton.styleFrom(

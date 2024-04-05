@@ -4,30 +4,26 @@ import 'package:passeport_nautique_estrie/controller/inscription_controller.dart
 
 class InscriptionPage extends StatefulWidget {
   final String? permitNumber;
-  final Future<void> Function() logoutAction;
   const InscriptionPage({
     Key? key,
     this.permitNumber,
-    required this.logoutAction,
   }) : super(key: key);
 
   @override
-  _InscriptionPageState createState() => _InscriptionPageState(logoutAction);
+  _InscriptionPageState createState() => _InscriptionPageState();
 }
 
 class _InscriptionPageState extends State<InscriptionPage> {
-  final Future<void> Function() logoutAction;
   final controller = InscriptionController();
 
-  _InscriptionPageState(this.logoutAction, {Key? key});
+  _InscriptionPageState({Key? key});
 
   String? selectedBoatType;
-   TextEditingController nomController = TextEditingController();
+  TextEditingController nomController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController marqueController = TextEditingController();
   TextEditingController modeleController = TextEditingController();
   TextEditingController longueurController = TextEditingController();
-
 
   @override
   void dispose() {
@@ -45,9 +41,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       // use the home.dart appBar function
       resizeToAvoidBottomInset: false,
       // use the home.dart appBar function
-      appBar: HomePage(
-        logoutAction: logoutAction,
-      ).appBar(context),
+      appBar: const HomePage().appBar(context),
       body: inscriptionBody(context),
     );
   }
@@ -250,7 +244,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HomePage(logoutAction: logoutAction),
+        builder: (context) => const HomePage(),
       ),
     );
   }

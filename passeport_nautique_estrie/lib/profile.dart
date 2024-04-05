@@ -2,11 +2,9 @@ import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
-  final Future<void> Function() logoutAction;
   final UserProfile? user;
 
-  const Profile(this.logoutAction, this.user, {final Key? key})
-      : super(key: key);
+  const Profile(this.user, {final Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +28,7 @@ class Profile extends StatelessWidget {
         Text('Name: ${user?.name}'),
         const SizedBox(height: 48),
         ElevatedButton(
-          onPressed: () async {
-            await logoutAction();
-          },
+          onPressed: () async {},
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF195444), // Background color
             minimumSize: const Size(200, 50),

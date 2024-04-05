@@ -3,13 +3,11 @@ import 'package:passeport_nautique_estrie/view/pages/home.dart';
 
 class CustomDrawer extends StatelessWidget {
   final VoidCallback? onEmbarcationsTap;
-  final Future<void> Function() logoutAction;
   // Add more parameters as needed
 
   const CustomDrawer({
     Key? key,
     this.onEmbarcationsTap,
-    required this.logoutAction,
     // Add more parameters as needed
   }) : super(key: key);
 
@@ -37,7 +35,7 @@ class CustomDrawer extends StatelessWidget {
               // navigate to the home page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  HomePage(logoutAction: logoutAction,)),
+                MaterialPageRoute(builder: (context) => const HomePage()),
               );
             },
           ),
@@ -59,11 +57,7 @@ class CustomDrawer extends StatelessWidget {
               // Update navigation to handle drawer item tap
             },
           ),
-          ListTile(
-              title: const Text('Me déconnecter'),
-              onTap: () async {
-                logoutAction();
-              }),
+          ListTile(title: const Text('Me déconnecter'), onTap: () async {}),
         ],
       ),
     );
