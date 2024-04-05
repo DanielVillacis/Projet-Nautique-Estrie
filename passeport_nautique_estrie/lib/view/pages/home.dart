@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: true, // set a true pour eviter que le clavier chevauche
       appBar: widget.appBar(context),
       drawer: CustomDrawer(
         onEmbarcationsTap: () {
