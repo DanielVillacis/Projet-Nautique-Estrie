@@ -22,8 +22,7 @@ CREATE TYPE type_pne_id AS ENUM ('serial_embarcation','serial_lavage',
 
 CREATE TABLE IF NOT EXISTS Utilisateur (
    	sub VARCHAR PRIMARY KEY,
-   	prenom VARCHAR NOT NULL,
-   	nom VARCHAR NOT NULL,
+   	display_name VARCHAR NOT NULL,
    	date_creation TIMESTAMP NOT NULL
 );
 
@@ -89,3 +88,7 @@ CREATE TABLE IF NOT EXISTS MiseAEau (
     id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau),
     id_embarcation_utilisateur pne_id references EmbarcationUtilisateur(id_embarcation_utilisateur)
 );
+INSERT INTO Role(nom_role, description) VALUES ('Plaisancier','Tout compte par défaut est plaisancier.' ||
+                                                              ' Ceci permet de laver une embarcation, faire une mise à l''eau, entre autre');
+
+INSERT INTO Role(nom_role, description) VALUES ('EmployeLavage','Tout employé qui peut faire des lavages d''embarcations.');

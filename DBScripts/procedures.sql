@@ -3,13 +3,18 @@ CREATE OR REPLACE PROCEDURE creer_embarcation_permis(
     p_description VARCHAR,
     p_marque VARCHAR(255),
     p_longueur INT,
-    p_photo VARCHAR(255)
+    p_photo VARCHAR(255),
+    in_display_name VARCHAR,
+    in_sub VARCHAR
 )
 AS $$
 BEGIN
     -- Insert a new entry into Embarcation
     INSERT INTO Embarcation(id_embarcation, description, marque, longueur, photo)
     VALUES (p_permis, p_description, p_marque, p_longueur, p_photo);
+
+    INSERT INTO EmbarcationUtilisateur (id_embarcation, nom, sub, id_embarcation_utilisateur)
+    VALUES (p_permis, in_display_name, in_sub, creer_pne_id('serial_embarcation_utilisateur'));
 END;
 $$ LANGUAGE plpgsql;
 
@@ -17,20 +22,82 @@ CREATE OR REPLACE PROCEDURE creer_embarcation(
     p_description VARCHAR,
     p_marque VARCHAR(255),
     p_longueur INT,
-    p_photo VARCHAR(255)
+    in_nom VARCHAR,
+    in_sub VARCHAR,
+    p_photo VARCHAR
+)
+AS $$
+DECLARE
+    v_id_embarcation VARCHAR;
+BEGIN
+    -- Insert a new entry into Embarcation
+    INSERT INTO Embarcation(id_embarcation, description, marque, longueur, photo)
+    VALUES (creer_pne_id('serial_embarcation') , p_description, p_marque, p_longueur, p_photo)
+    RETURNING id_embarcation INTO v_id_embarcation;
+
+    -- Add the Embarcation to EmbarcationUtilisateur
+    CALL ajouter_embarcation_utilisateur(v_id_embarcation, in_nom, in_sub);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE creer_embarcation_permis(
+    p_permis VARCHAR,
+    p_description VARCHAR,
+    p_marque VARCHAR(255),
+    p_longueur INT,
+    in_nom VARCHAR,
+    in_sub VARCHAR,
+    p_photo VARCHAR
 )
 AS $$
 BEGIN
     -- Insert a new entry into Embarcation
     INSERT INTO Embarcation(id_embarcation, description, marque, longueur, photo)
-    VALUES (creer_pne_id('serial_embarcation') , p_description, p_marque, p_longueur, p_photo);
+    VALUES (p_permis, p_description, p_marque, p_longueur, p_photo);
+
+    INSERT INTO EmbarcationUtilisateur (id_embarcation, nom, sub, id_embarcation_utilisateur)
+    VALUES (p_permis, in_nom, in_sub, creer_pne_id('serial_embarcation_utilisateur'));
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE creer_embarcation(
+    p_description VARCHAR,
+    p_marque VARCHAR(255),
+    p_longueur INT,
+    p_photo VARCHAR(255),
+    in_nom VARCHAR,
+    in_sub VARCHAR
+)
+AS $$
+DECLARE
+    v_id_embarcation VARCHAR;
+BEGIN
+    -- Insert a new entry into Embarcation
+    INSERT INTO Embarcation(id_embarcation, description, marque, longueur, photo)
+    VALUES (creer_pne_id('serial_embarcation') , p_description, p_marque, p_longueur, p_photo)
+    RETURNING id_embarcation INTO v_id_embarcation;
+
+    -- Add the Embarcation to EmbarcationUtilisateur
+    CALL ajouter_embarcation_utilisateur(v_id_embarcation, in_nom, in_sub);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE ajouter_embarcation_utilisateur(
+    in_id_embarcation VARCHAR,
+    in_display_name VARCHAR,
+    in_sub VARCHAR
+) AS $$
+BEGIN
+    -- Insert a new record into EmbarcationUtilisateur
+    INSERT INTO EmbarcationUtilisateur (id_embarcation, nom, sub, id_embarcation_utilisateur)
+    VALUES (in_id_embarcation, in_display_name, in_sub, creer_pne_id('serial_embarcation_utilisateur'));
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE PROCEDURE login(
     in_sub VARCHAR,
-    in_nom VARCHAR,
-    in_prenom VARCHAR
+    in_display_name VARCHAR
 ) AS $$
 DECLARE
     v_existing_sub VARCHAR;
@@ -43,30 +110,19 @@ BEGIN
     IF FOUND THEN
         -- User exists, check if prenom or nom is different
         IF v_existing_sub IS NOT NULL THEN
-            IF in_nom <> (SELECT nom FROM Utilisateur WHERE sub = in_sub) THEN
-                UPDATE Utilisateur SET nom = in_nom WHERE sub = in_sub;
-            END IF;
-            IF in_prenom <> (SELECT prenom FROM Utilisateur WHERE sub = in_sub) THEN
-                UPDATE Utilisateur SET prenom = in_prenom WHERE sub = in_sub;
+            IF in_display_name <> (SELECT display_name FROM Utilisateur WHERE sub = in_sub) THEN
+                UPDATE Utilisateur SET display_name = in_display_name WHERE sub = in_sub;
             END IF;
         END IF;
     ELSE
         -- User doesn't exist, create it
-        INSERT INTO Utilisateur (sub, prenom, nom, date_creation)
-        VALUES (in_sub, in_prenom, in_nom, NOW());
-    END IF;
-END;
-$$ LANGUAGE plpgsql;
+        INSERT INTO Utilisateur (sub, display_name, date_creation)
+        VALUES (in_sub, in_display_name, NOW());
 
-CREATE OR REPLACE PROCEDURE ajouter_embarcation_utilisateur(
-    in_id_embarcation VARCHAR,
-    in_nom VARCHAR,
-    in_sub VARCHAR
-) AS $$
-BEGIN
-    -- Insert a new record into EmbarcationUtilisateur
-    INSERT INTO EmbarcationUtilisateur (id_embarcation, nom, sub, id_embarcation_utilisateur)
-    VALUES (in_id_embarcation, in_nom, in_sub, creer_pne_id('serial_embarcation_utilisateur'));
+        -- Add role "plaisancier" to the user
+        INSERT INTO UtilisateurRole (nom_role, sub)
+        VALUES ('plaisancier', in_sub);
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -167,8 +223,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CALL ajouter_role_utilisateur('plaisancier', 'xavierTest');
-
 CREATE OR REPLACE PROCEDURE mise_eau(
     in_id_plan_eau VARCHAR, -- Assuming pne_id is a VARCHAR type
     in_id_embarcation_utilisateur VARCHAR -- Assuming pne_id is a VARCHAR type
@@ -179,6 +233,3 @@ BEGIN
     VALUES (creer_pne_id('serial_mise_eau'), NOW(), in_id_plan_eau, in_id_embarcation_utilisateur);
 END;
 $$ LANGUAGE plpgsql;
-
-
-

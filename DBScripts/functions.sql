@@ -15,24 +15,18 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION voir_embarcation_utilisateur(in_sub VARCHAR)
 RETURNS TABLE (
-    id_embarcation_utilisateur pne_id,
-    id_embarcation embarcation_id,
-    description VARCHAR,
-    marque VARCHAR,
-    longueur INT,
     photo VARCHAR,
-    nom VARCHAR
+    nom VARCHAR,
+    id_embarcation embarcation_id,
+    id_embarcation_utilisateur pne_id
 ) AS $$
 BEGIN
     RETURN QUERY
     SELECT
-        EU.id_embarcation_utilisateur,
-        E.id_embarcation,
-        E.description,
-        E.marque,
-        E.longueur,
         E.photo,
-        EU.nom
+        EU.nom,
+        E.id_embarcation,
+        EU.id_embarcation_utilisateur
     FROM
         EmbarcationUtilisateur EU
     INNER JOIN
@@ -41,3 +35,56 @@ BEGIN
         EU.sub = in_sub;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION voir_details_embarcation(embarcation_utilisateur_id VARCHAR)
+RETURNS TABLE (
+    nom VARCHAR,
+    description VARCHAR,
+    marque VARCHAR,
+    longueur INT,
+    photo VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        eu.nom,
+        e.description,
+        e.marque,
+        e.longueur,
+        e.photo
+    FROM
+        EmbarcationUtilisateur eu
+    INNER JOIN
+        Embarcation e ON eu.id_embarcation = e.id_embarcation
+    WHERE
+        eu.id_embarcation_utilisateur = embarcation_utilisateur_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION login(
+    in_sub VARCHAR,
+    in_display_name VARCHAR
+) RETURNS TABLE(role VARCHAR) AS $$
+BEGIN
+    -- Check if the user already exists
+    IF EXISTS (SELECT 1 FROM Utilisateur WHERE sub = in_sub) THEN
+        -- User exists, update display_name if different
+        UPDATE Utilisateur SET display_name = in_display_name WHERE sub = in_sub;
+    ELSE
+        -- User doesn't exist, create it
+        INSERT INTO Utilisateur (sub, display_name, date_creation)
+        VALUES (in_sub, in_display_name, NOW());
+
+        -- Add role "plaisancier" to the user
+        INSERT INTO UtilisateurRole (nom_role, sub)
+        VALUES ('Plaisancier', in_sub);
+    END IF;
+
+    -- Return all roles for the user
+    RETURN QUERY SELECT nom_role FROM UtilisateurRole WHERE sub = in_sub;
+END;
+$$ LANGUAGE plpgsql;
+

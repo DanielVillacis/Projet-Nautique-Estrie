@@ -57,7 +57,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // set a true pour eviter que le clavier chevauche
+      resizeToAvoidBottomInset:
+          true, // set a true pour eviter que le clavier chevauche
       appBar: widget.appBar(context),
       drawer: CustomDrawer(
         onEmbarcationsTap: () {
@@ -73,73 +74,120 @@ class _HomePageState extends State<HomePage> {
   }
 
   Center body(BuildContext context) {
-  return Center(
-    child: Container(
-      width: 400,
-      margin: const EdgeInsets.only(top: 100),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text(
-            'Mes Embarcations',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 28,
-              fontWeight: FontWeight.w900,
-              fontFamily: 'Poppins-Bold',
-            ),
-          ),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Display two items per row
-                mainAxisSpacing: 10.0, // Spacing between rows
-                crossAxisSpacing: 10.0, // Spacing between columns
+    return Center(
+      child: Container(
+        width: 350,
+        margin: const EdgeInsets.only(top: 60),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text(
+              'Mes Embarcations',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                fontFamily: 'Poppins-Bold',
               ),
-              itemCount: embarcations.length,
-              itemBuilder: (context, index) {
-                return FutureBuilder<String?>(
-                  future: Get.put(FirebaseStorageService()).getImage(embarcations[index][0]),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      // While waiting for the future to complete, return a loading indicator
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      // If an error occurs while fetching the image, display an error message
-                      return Text('Error loading image');
-                    } else {
-                      // If the future completes successfully, display the image
-                      final imgUrl = snapshot.data;
-                      return ListTile(
-                        // add a loop to display the embarcations
-                        title: Image.network(
-                          imgUrl!,
-                          height: 140,
-                        ),
-                        subtitle: Text(embarcations[index][1]),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailsEmbarcation(
-                                embarcationUtilisateur: embarcations[index][3],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: embarcations.length,
+                itemBuilder: (context, index) {
+                  return FutureBuilder<String?>(
+                    future: Get.put(FirebaseStorageService())
+                        .getImage(embarcations[index][0]),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // While waiting for the future to complete, return a loading indicator
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color.fromARGB(
+                                    255, 87, 87, 87), // Light gray color
+                                width: 0.2, // Adjust the width as needed
                               ),
                             ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                );
-              },
+                          ),
+                          child: const CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        // If an error occurs while fetching the image, display an error message
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color.fromARGB(
+                                    255, 87, 87, 87), // Light gray color
+                                width: 0.2, // Adjust the width as needed
+                              ),
+                            ),
+                          ),
+                          child: const Text('Error loading image'),
+                        );
+                      } else {
+                        // If the future completes successfully, display the image
+                        final imgUrl = snapshot.data;
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color.fromARGB(
+                                    255, 87, 87, 87), // Light gray color
+                                width: 0.2, // Adjust the width as needed
+                              ),
+                            ),
+                          ),
+                          child: ListTile(
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Nom:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(embarcations[index][1]),
+                              ],
+                            ),
+                            trailing: Image.network(
+                              imgUrl!,
+                              height: double.infinity,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailsEmbarcation(
+                                    embarcationUtilisateur: embarcations[index]
+                                        [3],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Container footer(BuildContext context) {
     return Container(

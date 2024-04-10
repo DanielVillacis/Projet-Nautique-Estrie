@@ -58,7 +58,8 @@ class Login extends StatelessWidget {
                   }
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white), // Set button background color
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.white), // Set button background color
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -100,15 +101,23 @@ class Login extends StatelessWidget {
 
       if (userCredential.user != null) {
         final conn = await DB.getConnection();
-        await conn
-            .execute(('CALl login(@sub, @nom, @prenom)'), substitutionValues: {
-          'sub': googleUser.id,
-          'nom': googleUser.displayName,
-          'prenom': googleUser.displayName,
-        });
+        List<List<dynamic>> result = await conn.query(
+            ('select * from login(@sub, @display_name)'),
+            substitutionValues: {
+              'sub': googleUser.id,
+              'display_name': googleUser.displayName,
+            });
         DB.closeConnection(conn);
 
+        List<String> roles = [];
+        for (List<dynamic> sublist in result) {
+          if (sublist.isNotEmpty) {
+            roles.add(sublist[0] as String);
+          }
+        }
+
         final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList('roles', roles);
         await prefs.setString('sub', googleUser.id);
         await prefs.setString('prenom', googleUser.displayName ?? 'n/a');
         await prefs.setString('nom', googleUser.displayName ?? 'n/a');
