@@ -108,7 +108,7 @@ BEGIN
     WHERE sub = in_sub;
 
     IF FOUND THEN
-        -- User exists, check if prenom or nom is different
+        -- User exists, check if display_name is different
         IF v_existing_sub IS NOT NULL THEN
             IF in_display_name <> (SELECT display_name FROM Utilisateur WHERE sub = in_sub) THEN
                 UPDATE Utilisateur SET display_name = in_display_name WHERE sub = in_sub;
