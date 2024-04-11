@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "30124424543-7ibp3bk7ubd52hd86v2d15drh9ji46rk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.passeport_nautique_estrie",
+            "certificate_hash": "fb8990e031ea20c1d6e1a481b2513bf32bbd0638"
+          }
+        },
+        {
           "client_id": "30124424543-cgfft9625ac107139gicqgplpd5qbupe.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.passeport_nautique_estrie",
             "certificate_hash": "ff532889c40a12a9c6ff86dcef796ec02ca10567"
+          }
+        },
+        {
+          "client_id": "30124424543-cl3udcc0n002ppsf1eelbsj74eq88j8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.passeport_nautique_estrie",
+            "certificate_hash": "9c80cb5fc01b0ad19dd55489a386c9a54a5251ba"
           }
         },
         {
