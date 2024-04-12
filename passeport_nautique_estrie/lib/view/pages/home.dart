@@ -16,11 +16,11 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 
-  PreferredSizeWidget appBar(context) {
+  PreferredSizeWidget appBar(BuildContext context, String title) {
     return AppBar(
-      title: const Text(
-        'Accueil',
-        style: TextStyle(
+      title: Text(
+        title,
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 26,
           fontWeight: FontWeight.w200,
@@ -59,12 +59,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset:
           true, // set a true pour eviter que le clavier chevauche
-      appBar: widget.appBar(context),
+      appBar: widget.appBar(context, 'Accueil'),
       drawer: CustomDrawer(
         onEmbarcationsTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => widget.appBar(context)),
+            MaterialPageRoute(builder: (context) => widget.appBar(context, 'Mes Embarcations')),
           );
         },
       ),

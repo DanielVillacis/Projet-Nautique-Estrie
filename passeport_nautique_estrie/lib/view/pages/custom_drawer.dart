@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:passeport_nautique_estrie/login.dart';
+import 'package:passeport_nautique_estrie/view/pages/account_page.dart';
+import 'package:passeport_nautique_estrie/view/pages/help_page.dart';
 import 'package:passeport_nautique_estrie/view/pages/home.dart';
+import 'package:passeport_nautique_estrie/view/pages/information_page.dart';
 
 class CustomDrawer extends StatelessWidget {
   final VoidCallback? onEmbarcationsTap;
@@ -44,19 +47,30 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             title: const Text('Mes infos'),
             onTap: () {
-              // Update navigation to handle drawer item tap
+              // navitage to the account page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AccountPage()),
+              );
             },
           ),
           ListTile(
             title: const Text('A propos'),
             onTap: () {
-              // Update navigation to handle drawer item tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const InformationPage()),
+              );
             },
           ),
           ListTile(
             title: const Text('Aide'),
             onTap: () {
               // Update navigation to handle drawer item tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HelpPage()),
+              );
             },
           ),
           ListTile(
