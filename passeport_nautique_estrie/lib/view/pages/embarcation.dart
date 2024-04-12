@@ -228,7 +228,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
               // Navigate to the addBoat.dart page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddBoatPage()),
+                MaterialPageRoute(builder: (context) => const AddBoatPage()),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -279,7 +279,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Imprimer le code d' 'embarcation?'),
+          title: const Text('Imprimer le code d\'embarcation?'),
           content: const Text(
               'Voulez-vous imprimer le code QR de votre embarcation?'),
           actions: <Widget>[
@@ -287,7 +287,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Annuler'),
+              child: const Text('Annuler'),
             ),
             TextButton(
               onPressed: () {
@@ -296,7 +296,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
                 // https://pub.dev/packages/printing
                 Navigator.of(context).pop();
               },
-              child: Text('Imprimer'),
+              child: const Text('Imprimer'),
             ),
           ],
         );
