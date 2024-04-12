@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'home.dart';
 import 'package:passeport_nautique_estrie/controller/inscription_controller.dart';
@@ -80,7 +81,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     height: 6,
                   ),
                   TextFormField(
-                    controller: TextEditingController(text: widget.permitNumber),
+                    controller:
+                        TextEditingController(text: widget.permitNumber),
                     enabled: false,
                     decoration: const InputDecoration(
                       labelText: 'Numéro de permis',
@@ -167,8 +169,22 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 ),
                 TextFormField(
                   controller: longueurController,
+                  keyboardType:
+                      TextInputType.number, // Opens numbers only keyboard
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly // Allows only digits
+                  ],
+                  validator: (value) {
+                    if (value != null && value.isNotEmpty) {
+                      // Check if the entered value contains only digits
+                      if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return 'Veuillez entrer seulement un nombre';
+                      }
+                    }
+                    return null; // Return null if validation succeeds
+                  },
                   decoration: const InputDecoration(
-                    labelText: 'Longueur',
+                    labelText: 'Longueur (po)',
                     labelStyle: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -180,6 +196,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     ),
                   ),
                 ),
+
                 DropdownButtonFormField<String>(
                   value: selectedBoatType,
                   onChanged: (value) {
@@ -276,10 +293,6 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 const SizedBox(
                   height: 80,
                 ),
-                // Image.asset(
-                //   'Assets/CREE_Logo - vert.png',
-                //   width: 140,
-                // ),
               ],
             ),
           ),
@@ -296,6 +309,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       _selectedImage = File(returnedImage!.path);
     });
   }
+
   Future _pickImageFromCamera() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.camera);
