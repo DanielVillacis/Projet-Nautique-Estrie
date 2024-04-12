@@ -126,27 +126,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-CREATE OR REPLACE PROCEDURE ajouter_lavage(
-    in_id_embarcation VARCHAR,
-    in_type_lavage VARCHAR,
-    in_self_serve BOOLEAN
-) AS $$
-BEGIN
-    -- Insert a new record into Lavage
-    INSERT INTO Lavage (id_embarcation, type_lavage, date, self_serve, id_lavage)
-    VALUES (in_id_embarcation, in_type_lavage::type_lavage, NOW(), in_self_serve,  creer_pne_id('serial_lavage'));
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE PROCEDURE creer_plan_eau(
     in_niveau_couleur VARCHAR,
-    in_emplacement GEOMETRY(Point, 4326) -- Assuming WGS 84 coordinate system
+    in_emplacement GEOMETRY(Point, 4326),
+    in_nom VARCHAR
 ) AS $$
 BEGIN
     -- Insert a new record into PlanEau
-    INSERT INTO PlanEau (niveau_couleur, emplacement, id_plan_eau)
-    VALUES (in_niveau_couleur::niveau, in_emplacement, creer_pne_id('serial_plan_eau'));
+    INSERT INTO PlanEau (niveau_couleur, emplacement, id_plan_eau, nom)
+    VALUES (in_niveau_couleur::niveau, in_emplacement, creer_pne_id('serial_plan_eau'),in_nom);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -233,3 +221,18 @@ BEGIN
     VALUES (creer_pne_id('serial_mise_eau'), NOW(), in_id_plan_eau, in_id_embarcation_utilisateur);
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE ajouter_embarcation_utilisateur(
+    IN p_sub VARCHAR,
+    IN p_id_embarcation pne_id,
+    IN p_nom VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Insert a new row into EmbarcationUtilisateur table
+    INSERT INTO EmbarcationUtilisateur (id_embarcation, nom, sub, id_embarcation_utilisateur)
+    VALUES (p_id_embarcation, p_nom, p_sub, creer_pne_id('serial_embarcation_utilisateur'));
+END;
+$$;

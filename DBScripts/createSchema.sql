@@ -60,8 +60,10 @@ CREATE TABLE IF NOT EXISTS NoteDossier (
 	idNote pne_id PRIMARY KEY
 );
 CREATE TABLE IF NOT EXISTS CodeUnique (
-   	code_unique varchar PRIMARY KEY,
-   	id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau)
+    code_unique VARCHAR PRIMARY KEY,
+    id_plan_eau INTEGER REFERENCES PlanEau(id_plan_eau),
+    utilisePourLavage BOOLEAN DEFAULT FALSE,
+    utilisePourMiseEau BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS Certification (
