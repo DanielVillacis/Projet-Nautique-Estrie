@@ -11,7 +11,7 @@ class EmbarcationModel {
     try {
       final connection = await DB.getConnection();
       var results = await connection.query(
-        "select * from voir_details_embarcation(@eu)",
+        "select * from voir_details_embarcationUtilisateur(@eu)",
         substitutionValues: {"eu": embarcationUtilisateur},
       );
       details = results;

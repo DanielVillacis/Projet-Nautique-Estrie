@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:passeport_nautique_estrie/db.dart';
+import 'package:passeport_nautique_estrie/services/firebase_storage_service.dart';
 import 'package:passeport_nautique_estrie/view/pages/add_boat.dart';
 import 'package:passeport_nautique_estrie/view/pages/custom_drawer.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:passeport_nautique_estrie/controller/embarcation_controller.dart';
-import 'package:passeport_nautique_estrie/model/embarcation_model.dart';
 
 class DetailsEmbarcation extends StatefulWidget {
   final String embarcationUtilisateur;
 
-  const DetailsEmbarcation(
-      {Key? key,
-      required this.embarcationUtilisateur})
+  const DetailsEmbarcation({Key? key, required this.embarcationUtilisateur})
       : super(key: key);
 
   @override
@@ -37,21 +35,41 @@ class DetailsEmbarcation extends StatefulWidget {
 
 class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
   final String embarcationUtilisateur;
-  final EmbarcationModel model;
-  final EmbarcationController controller;
 
-  _DetailsEmbarcationState(this.embarcationUtilisateur)
-      : model = EmbarcationModel(embarcationUtilisateur),
-        controller = EmbarcationController(embarcationUtilisateur) {
-    controller.fetchDetails();
-        }
+  _DetailsEmbarcationState(this.embarcationUtilisateur);
 
   List<List<dynamic>> details = [];
+
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDetailsEmbarcations();
+  }
+
+  Future<void> _fetchDetailsEmbarcations() async {
+    try {
+      final connection = await DB.getConnection();
+      var results = await connection.query(
+        "select * from voir_details_embarcationUtilisateur(@eu)",
+        substitutionValues: {"eu": embarcationUtilisateur},
+      );
+      setState(() {
+        details = results;
+        _isLoading = false;
+      });
+      await connection.close();
+    } catch (e) {
+      print("Error fetching data: $e");
+      _isLoading = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: DetailsEmbarcation(
         embarcationUtilisateur: embarcationUtilisateur,
       ).appBar(context),
@@ -67,7 +85,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
           );
         },
       ),
-      body: model.isLoading ? _buildLoadingIndicator() : body(),
+      body: _isLoading ? _buildLoadingIndicator() : body(),
       bottomNavigationBar: footer(context),
     );
   }
@@ -82,7 +100,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
     return SingleChildScrollView(
       child: Center(
         child: Container(
-          width: 400,
+          width: 260,
           margin: const EdgeInsets.only(top: 50),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -93,7 +111,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 28,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   fontFamily: 'Poppins-Bold',
                 ),
               ),
@@ -114,6 +132,9 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 12,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -128,12 +149,23 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
                   const SizedBox(height: 8), // Add spacing between fields
                 ],
               ),
-              const SizedBox(height: 8), // Add spacing between fields and image
-              Image.network(
-                details[0][4],
-                width: 300, // Adjust the width of the image as needed
-                height: 300, // Adjust the height of the image as needed
-                fit: BoxFit.cover, // Adjust the fit of the image as needed
+              const SizedBox(
+                  height: 10), // Add spacing between fields and image
+              FutureBuilder<String?>(
+                future: getImageUrl(details[0][4]),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Error loading image');
+                  } else {
+                    return Image.network(
+                      snapshot.data!,
+                      width: 200,
+                      height: 200,
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 20),
             ],
@@ -196,9 +228,7 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
               // Navigate to the addBoat.dart page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const AddBoatPage(
-                        )),
+                MaterialPageRoute(builder: (context) => AddBoatPage()),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -272,5 +302,10 @@ class _DetailsEmbarcationState extends State<DetailsEmbarcation> {
         );
       },
     );
+  }
+
+  Future<String?> getImageUrl(String file) async {
+    // Use FirebaseStorageService to fetch image URL based on embarcationUtilisateur
+    return FirebaseStorageService().getImage(file);
   }
 }
