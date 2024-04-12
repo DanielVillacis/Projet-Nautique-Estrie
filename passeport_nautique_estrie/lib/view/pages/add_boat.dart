@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passeport_nautique_estrie/controller/add_boat_controller.dart';
+import 'package:passeport_nautique_estrie/view/pages/add_already_existing_boat.dart';
 import 'inscription.dart';
 import 'home.dart';
 
@@ -154,10 +155,28 @@ class _AddBoatPageState extends State<AddBoatPage> {
                 ],
               ),
             ],
+            const SizedBox(height: 20),
             const SizedBox(height: 60),
             Image.asset(
               'Assets/CREE_Logo - vert.png',
               width: 140,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddExistingBoat()),
+                );
+              },
+              child: const Text(
+                'Ajouter une embarcation déjà enregistrée',
+                style: TextStyle(
+                  color: Colors
+                      .blue, // Change the color to blue or any other color you prefer
+                  decoration: TextDecoration.underline, // Underline the text
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ],
         ),

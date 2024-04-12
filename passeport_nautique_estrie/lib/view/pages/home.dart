@@ -2,9 +2,9 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:passeport_nautique_estrie/services/firebase_storage_service.dart';
 import 'package:passeport_nautique_estrie/view/pages/embarcation.dart';
+import 'package:passeport_nautique_estrie/view/popup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'custom_drawer.dart';
 import 'add_boat.dart';
@@ -139,42 +139,46 @@ class _HomePageState extends State<HomePage> {
                           decoration: const BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 87, 87, 87), // Light gray color
-                                width: 0.2, // Adjust the width as needed
+                                color: Color.fromARGB(255, 87, 87, 87),
+                                width: 0.2,
                               ),
                             ),
                           ),
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Nom:',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Text(embarcations[index][1]),
-                              ],
-                            ),
-                            trailing: Image.network(
-                              imgUrl!,
-                              height: double.infinity,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailsEmbarcation(
-                                    embarcationUtilisateur: embarcations[index]
-                                        [3],
-                                  ),
-                                ),
-                              );
+                          child: GestureDetector(
+                            onLongPress: () {
+                              PopupMenuUtil.showPopupMenu(context, embarcations[index][3], index);
                             },
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Nom:',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(embarcations[index][1]),
+                                ],
+                              ),
+                              trailing: Image.network(
+                                imgUrl!,
+                                height: double.infinity,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailsEmbarcation(
+                                      embarcationUtilisateur:
+                                          embarcations[index][3],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         );
                       }
@@ -253,3 +257,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

@@ -37,7 +37,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION voir_details_embarcation(embarcation_utilisateur_id VARCHAR)
+CREATE OR REPLACE FUNCTION voir_details_embarcationUtilisateur(embarcation_utilisateur_id VARCHAR)
 RETURNS TABLE (
     nom VARCHAR,
     description VARCHAR,
@@ -62,6 +62,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION voir_details_embarcation(p_id_embarcation varchar)
+RETURNS Embarcation AS $$
+DECLARE
+    embarcation_record Embarcation%ROWTYPE;
+BEGIN
+    SELECT * INTO embarcation_record FROM Embarcation WHERE id_embarcation = p_id_embarcation;
+    RETURN embarcation_record;
+END;
+$$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION login(
@@ -87,4 +96,5 @@ BEGIN
     RETURN QUERY SELECT nom_role FROM UtilisateurRole WHERE sub = in_sub;
 END;
 $$ LANGUAGE plpgsql;
+
 

@@ -233,3 +233,18 @@ BEGIN
     VALUES (creer_pne_id('serial_mise_eau'), NOW(), in_id_plan_eau, in_id_embarcation_utilisateur);
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE ajouter_embarcation_utilisateur(
+    IN sub VARCHAR,
+    IN id_embarcation pne_id,
+    IN nom VARCHAR
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Insert a new row into EmbarcationUtilisateur table
+    INSERT INTO EmbarcationUtilisateur (id_embarcation, nom, sub, id_embarcation_utilisateur)
+    VALUES (id_embarcation, nom, sub, creer_pne_id('serial_embarcation_utilisateur'));
+END;
+$$;
