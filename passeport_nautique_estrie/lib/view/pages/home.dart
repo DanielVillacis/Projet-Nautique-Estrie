@@ -231,27 +231,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              // Handle 'Prêter une embarcation' button tap
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF18848C),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-            ),
-            child: const Text(
-              'Prêter une embarcation',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins-Bold',
-              ),
-            ),
-          ),
         ],
       ),
     );
