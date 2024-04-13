@@ -46,6 +46,8 @@ dependencies:
   get: ^4.6.6
   firebase_storage: ^11.6.9
   image_picker: ^1.0.7
+  qr_code_dart_scan: ^0.7.6
+  barcode_scanner: ^3.6.2
 
 dev_dependencies:
   flutter_test:

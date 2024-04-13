@@ -141,12 +141,13 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE PROCEDURE creer_plan_eau(
     in_niveau_couleur VARCHAR,
-    in_emplacement GEOMETRY(Point, 4326) -- Assuming WGS 84 coordinate system
+    in_emplacement GEOMETRY(Point, 4326), -- Assuming WGS 84 coordinate system
+    in_nom VARCHAR
 ) AS $$
 BEGIN
     -- Insert a new record into PlanEau
-    INSERT INTO PlanEau (niveau_couleur, emplacement, id_plan_eau)
-    VALUES (in_niveau_couleur::niveau, in_emplacement, creer_pne_id('serial_plan_eau'));
+    INSERT INTO PlanEau (niveau_couleur, emplacement, id_plan_eau, nom)
+    VALUES (in_niveau_couleur::niveau, in_emplacement, creer_pne_id('serial_plan_eau'), in_nom);
 END;
 $$ LANGUAGE plpgsql;
 

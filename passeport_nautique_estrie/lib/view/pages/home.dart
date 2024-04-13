@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:passeport_nautique_estrie/services/firebase_storage_service.dart';
 import 'package:passeport_nautique_estrie/view/pages/embarcation.dart';
-import 'package:passeport_nautique_estrie/view/popup.dart';
+import 'package:passeport_nautique_estrie/view/pages/popup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'custom_drawer.dart';
 import 'add_boat.dart';

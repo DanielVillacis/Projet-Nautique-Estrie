@@ -6,7 +6,7 @@ class PopupMenuUtil {
   static void showPopupMenu(
       BuildContext context, String embarcationUtilisateur, int index) async {
     final RenderBox overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+        Overlay.of(context).context.findRenderObject() as RenderBox;
     final RenderBox itemBox = context.findRenderObject() as RenderBox;
     final Offset position = itemBox.localToGlobal(Offset.zero);
 
@@ -36,9 +36,13 @@ class PopupMenuUtil {
     if (selected != null) {
       // Handle the selected option here
       if (selected == 'Enregistrer un lavage') {
-        // Perform action for "Enregistrer un lavage"
+        // Navigate to the QRScanPage for scanning QR code
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => AddLavagePage()),
+        // );
       } else if (selected == 'Voir l\'embarcation') {
-        // Perform action for "Voir l'embarcation"
+        // Navigate to DetailsEmbarcationPage to view the details of the boat
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -51,7 +55,9 @@ class PopupMenuUtil {
         // Navigate to the ShareEmbarcationPage
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ShareBoat(embarcationUtilisateur)),
+          MaterialPageRoute(
+            builder: (context) => ShareBoat(embarcationUtilisateur),
+          ),
         );
       }
     }
