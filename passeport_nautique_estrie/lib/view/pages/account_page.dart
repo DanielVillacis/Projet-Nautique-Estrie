@@ -29,7 +29,6 @@ class _AccountPageState extends State<AccountPage> {
       final connection = await DB.getConnection();
       final prefs = await SharedPreferences.getInstance();
       final sub = prefs.getString('sub');
-      print(sub);
       var results = await connection.query(
         "select * from utilisateur where sub = @sub;",
         substitutionValues: {"sub": sub},
@@ -39,7 +38,7 @@ class _AccountPageState extends State<AccountPage> {
       });
       await connection.close();
     } catch (e) {
-      print("Error fetching data: $e");
+      
     }
   }
 
