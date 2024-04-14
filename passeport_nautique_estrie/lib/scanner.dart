@@ -17,6 +17,7 @@ class BarcodeUtils {
       qrText = json.decode(barcodeScanRes);
       if (qrText["type"] == "lavage") {
         await addLavageToEmbarcation(embarcationUtilisateur, qrText);
+         onSuccess('Lavage bien enregistré');
         
       }
       if (qrText["type"] == "mise à l'eau") {
