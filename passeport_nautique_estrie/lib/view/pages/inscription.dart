@@ -48,7 +48,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       // use the home.dart appBar function
       resizeToAvoidBottomInset: true,
       // use the home.dart appBar function
-      appBar: const HomePage().appBar(context),
+      appBar: const HomePage().appBar(context, 'Inscription'),
       body: inscriptionBody(context),
     );
   }

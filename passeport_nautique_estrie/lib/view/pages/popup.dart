@@ -69,82 +69,11 @@ class PopupMenuUtil {
       }
     }
   }
-
-  // static Future<void> scanQR(BuildContext context,
-  //     String embarcationUtilisateur, Function(String) onSuccess) async {
-  //   String barcodeScanRes;
-  //   Map<String, dynamic> qrText = {};
-  //   try {
-  //     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-  //         '#ff6666', 'Cancel', true, ScanMode.QR);
-  //     qrText = json.decode(barcodeScanRes);
-  //     if (qrText["type"] == "lavage") {
-  //       await addLavageToEmbarcation(embarcationUtilisateur, qrText);
-        
-  //     }
-  //     if (qrText["type"] == "mise à l'eau") {
-  //       await addMiseAEauToEmbarcation(embarcationUtilisateur, qrText);
-  //       onSuccess('Mise à l\'eau bien enregistré');
-  //     }
-
-  //     // After adding the lavage, show a success message
-      
-  //   } on PlatformException {
-  //     barcodeScanRes = 'Failed to get platform version.';
-  //   }
-  // }
-
+  
   static void showSuccessMessage(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
       duration: Duration(seconds: 2), // Adjust the duration as needed
     ));
   }
-
-  // static Future<List<List<dynamic>>> addLavageToEmbarcation(
-  //     String enbarcationUtilisateur, Map lavageFait) async {
-  //   final connection = await DB.getConnection();
-  //   var results = await connection.query(
-  //     "SELECT * from add_lavage_no_remove(@type_lavage,@id_embarcation_utilisateur,@code,@self_serve)",
-  //     substitutionValues: {
-  //       "type_lavage": lavageFait["type lavage"],
-  //       "id_embarcation_utilisateur": enbarcationUtilisateur,
-  //       "code": lavageFait["code unique"],
-  //       "self_serve": lavageFait["self_serve"]
-  //     },
-  //   );
-  //   DB.closeConnection(connection);
-  //   String idEmbarcation = results[0][0] as String;
-  //   final prefs = await SharedPreferences.getInstance();
-  //   DateFormat dateformat = DateFormat('yyyy-MM-dd HH:mm');
-  //   DateTime now = DateTime.now().toLocal();
-
-  //   await prefs.setStringList(
-  //       'lastLavage$idEmbarcation', [idEmbarcation, dateformat.format(now)]);
-
-  //   return results;
-  // }
-
-  // static Future<List<List<dynamic>>> addMiseAEauToEmbarcation(
-  //     String enbarcationUtilisateur, Map MiseEauFait) async {
-  //   final connection = await DB.getConnection();
-  //   var results = await connection.query(
-  //     "SELECT * from add_mise_eau_no_remove(@p_planEau,@id_embarcation_utilisateur,@code)",
-  //     substitutionValues: {
-  //       "p_planEau": MiseEauFait["plan eau"],
-  //       "id_embarcation_utilisateur": enbarcationUtilisateur,
-  //       "code": MiseEauFait["code unique"],
-  //     },
-  //   );
-  //   DB.closeConnection(connection);
-  //   String idEmbarcation = results[0][0] as String;
-  //   final prefs = await SharedPreferences.getInstance();
-  //   DateFormat dateformat = DateFormat('yyyy-MM-dd HH:mm');
-  //   DateTime now = DateTime.now().toLocal();
-
-  //   await prefs.setStringList(
-  //       'lastMiseEau$idEmbarcation', [idEmbarcation, dateformat.format(now)]);
-
-  //   return results;
-  // }
 }

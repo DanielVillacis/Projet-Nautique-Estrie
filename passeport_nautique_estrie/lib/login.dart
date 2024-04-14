@@ -111,13 +111,13 @@ class Login extends StatelessWidget {
           },
         );
         var result2 = await conn.query(
-          'SELECT * from get_last_lavage2(@sub);',
+          'SELECT * from get_last_lavage(@sub);',
           substitutionValues: {
             'sub': googleUser.id,
           },
         );
         var result3 = await conn.query(
-          'SELECT * from get_last_mise_a_eau2(@sub);',
+          'SELECT * from get_last_mise_a_eau(@sub);',
           substitutionValues: {
             'sub': googleUser.id,
           },
@@ -127,52 +127,53 @@ class Login extends StatelessWidget {
         DateFormat dateformat = DateFormat('yyyy-MM-dd HH:mm');
 
         List<Map<String, dynamic>> lavages = [];
-        for (var row in result2) {
-          String idEmbarcation = row[0] as String;
-          DateTime? lastLavage =
-              row[1] as DateTime?; // Assuming DateTime for last_lavage
+        if (!result2.any((element) => element.any((element) => element == null))) {
+          for (var row in result2) {
+            String idEmbarcation = row[0] as String;
+            DateTime? lastLavage =
+                row[1] as DateTime?; // Assuming DateTime for last_lavage
 
-          // Create a map to store the values
-          Map<String, dynamic> lavageMap = {
-            'id_embarcation': idEmbarcation,
-            'last_lavage': lastLavage,
-          };
+            // Create a map to store the values
+            Map<String, dynamic> lavageMap = {
+              'id_embarcation': idEmbarcation,
+              'last_lavage': lastLavage,
+            };
 
-          // Add the map to the list
-          lavages.add(lavageMap);
-          if (lastLavage != null) {
-            await prefs.setStringList('lastLavage$idEmbarcation',
-                [idEmbarcation, dateformat.format(lastLavage!)]);
-          }else{
-            
-          await prefs.setStringList('lastLavage$idEmbarcation',
-              [idEmbarcation, 'n/a']);
+            // Add the map to the list
+            lavages.add(lavageMap);
+            if (lastLavage != null) {
+              await prefs.setString(
+                  'lastLavage$idEmbarcation', dateformat.format(lastLavage!));
+            } else {
+              await prefs.setString('lastLavage$idEmbarcation', 'Aucun lavage');
+            }
           }
         }
-
         List<Map<String, dynamic>> misesAEau = [];
-        for (var row in result2) {
-          String idEmbarcation = row[0] as String;
-          DateTime? lastMiseEau =
-              row[1] as DateTime?; // Assuming DateTime for last_lavage
+        if (!result3.any((element) => element.any((element) => element == null))) {
+          for (var row in result2) {
+            String idEmbarcation = row[0] as String;
+            DateTime? lastMiseEau =
+                row[1] as DateTime?; // Assuming DateTime for last_lavage
 
-          // Create a map to store the values
-          Map<String, dynamic> misesAEauMap = {
-            'id_embarcation': idEmbarcation,
-            'last_mise_eau': lastMiseEau,
-          };
+            // Create a map to store the values
+            Map<String, dynamic> misesAEauMap = {
+              'id_embarcation': idEmbarcation,
+              'last_mise_eau': lastMiseEau,
+            };
 
-          // Add the map to the list
-          misesAEau.add(misesAEauMap);
-          if (lastMiseEau != null) {
-            await prefs.setStringList('lastMiseEau$idEmbarcation',
-                [idEmbarcation, dateformat.format(lastMiseEau!)]);
-          }else{
-            
-          await prefs.setStringList('lastMiseEau$idEmbarcation',
-              [idEmbarcation, 'n/a']);
+            // Add the map to the list
+            misesAEau.add(misesAEauMap);
+            if (lastMiseEau != null) {
+              await prefs.setString(
+                  'lastMiseEau$idEmbarcation', dateformat.format(lastMiseEau!));
+            } else {
+              await prefs.setString(
+                  'lastMiseEau$idEmbarcation', 'Aucune mise à l\'eau');
+            }
           }
         }
+
         List<String> roles = [];
         for (List<dynamic> sublist in result1) {
           if (sublist.isNotEmpty) {

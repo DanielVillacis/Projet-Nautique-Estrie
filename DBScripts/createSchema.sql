@@ -1,7 +1,7 @@
 DROP DOMAIN IF EXISTS pne_id, embarcation_id cascade;
 
 DROP SEQUENCE IF EXISTS serial_embarcation,serial_lavage,
-    serial_embarcation_utilisateur,serial_note,serial_plan_eau cascade;
+    serial_embarcation_utilisateur,serial_note,serial_plan_eau, serial_mise_eau cascade;
 
 DROP TYPE IF EXISTS type_lavage,niveau, type_pne_id cascade;
 
@@ -62,7 +62,9 @@ CREATE TABLE IF NOT EXISTS NoteDossier (
 );
 CREATE TABLE IF NOT EXISTS CodeUnique (
    	code_unique varchar PRIMARY KEY,
-   	id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau)
+   	id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau),
+    utilisePourLavage BOOLEAN DEFAULT false,
+    utilisePourMiseEau BOOLEAN DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS Certification (
@@ -85,7 +87,7 @@ CREATE TABLE IF NOT EXISTS UtilisateurRole (
 );
 CREATE TABLE IF NOT EXISTS MiseAEau (
     id_mise_eau pne_id PRIMARY KEY,
-    date DATE NOT NULL,
+    date TIMESTAMP NOT NULL,
     id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau),
     id_embarcation_utilisateur pne_id references EmbarcationUtilisateur(id_embarcation_utilisateur),
     id_embarcation embarcation_id NOT NULL

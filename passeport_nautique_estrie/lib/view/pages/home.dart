@@ -16,11 +16,11 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 
-  PreferredSizeWidget appBar(context) {
+  PreferredSizeWidget appBar(BuildContext context, String title) {
     return AppBar(
-      title: const Text(
-        'Accueil',
-        style: TextStyle(
+      title: Text(
+        title,
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 26,
           fontWeight: FontWeight.w200,
@@ -64,13 +64,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: widget.appBar(context),
+      resizeToAvoidBottomInset:
+          true, // set a true pour eviter que le clavier chevauche
+      appBar: widget.appBar(context, 'Accueil'),
       drawer: CustomDrawer(
         onEmbarcationsTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => widget.appBar(context)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    widget.appBar(context, 'Mes Embarcations')),
           );
         },
       ),
@@ -118,17 +121,18 @@ class _HomePageState extends State<HomePage> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Container(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Color.fromARGB(255, 87, 87, 87),
-                                  width: 0.2,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Color.fromARGB(255, 87, 87, 87),
+                                    width: 0.2,
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: const CircularProgressIndicator(),
-                          );
+                              child: const Center(
+                                  child: CircularProgressIndicator()));
                         } else if (snapshot.hasError) {
                           return Container(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),

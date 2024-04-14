@@ -29,7 +29,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const HomePage().appBar(context),
+      appBar: const HomePage().appBar(context, 'Inscription'),
       resizeToAvoidBottomInset: true,
       body: addBoatBody(context),
     );

@@ -17,8 +17,7 @@ class BarcodeUtils {
       qrText = json.decode(barcodeScanRes);
       if (qrText["type"] == "lavage") {
         await addLavageToEmbarcation(embarcationUtilisateur, qrText);
-         onSuccess('Lavage bien enregistré');
-        
+        onSuccess('Lavage bien enregistré');
       }
       if (qrText["type"] == "mise à l'eau") {
         await addMiseAEauToEmbarcation(embarcationUtilisateur, qrText);
@@ -31,6 +30,7 @@ class BarcodeUtils {
 
   static Future<List<List<dynamic>>> addLavageToEmbarcation(
       String enbarcationUtilisateur, Map lavageFait) async {
+    final prefs = await SharedPreferences.getInstance();
     final connection = await DB.getConnection();
     var results = await connection.query(
       "SELECT * from add_lavage_no_remove(@type_lavage,@id_embarcation_utilisateur,@code,@self_serve)",
@@ -42,12 +42,16 @@ class BarcodeUtils {
       },
     );
     DB.closeConnection(connection);
-    // Handle the result as needed
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm');
+
+    await prefs.setString(
+        'lastLavage${results[0][0]}', dateFormat.format(DateTime.now()));
     return results;
   }
 
   static Future<List<List<dynamic>>> addMiseAEauToEmbarcation(
       String enbarcationUtilisateur, Map MiseEauFait) async {
+    final prefs = await SharedPreferences.getInstance();
     final connection = await DB.getConnection();
     var results = await connection.query(
       "SELECT * from add_mise_eau_no_remove(@p_planEau,@id_embarcation_utilisateur,@code)",
@@ -58,7 +62,10 @@ class BarcodeUtils {
       },
     );
     DB.closeConnection(connection);
-    // Handle the result as needed
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm');
+
+    await prefs.setString(
+        'lastMiseEau${results[0][0]}', dateFormat.format(DateTime.now()));
     return results;
   }
 }
