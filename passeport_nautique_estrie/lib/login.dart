@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:passeport_nautique_estrie/db.dart';
 import 'package:passeport_nautique_estrie/view/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,7 +69,7 @@ class Login extends StatelessWidget {
                   ),
                 ),
                 icon: Image.asset(
-                  'Assets/google_logo.png', // Path to your Google logo image asset
+                  'assets/google_logo.png', // Path to your Google logo image asset
                   height: 24, // Adjust the height of the Google logo
                 ),
                 label: const Flexible(
@@ -101,22 +103,82 @@ class Login extends StatelessWidget {
 
       if (userCredential.user != null) {
         final conn = await DB.getConnection();
-        List<List<dynamic>> result = await conn.query(
-            ('select * from login(@sub, @display_name)'),
-            substitutionValues: {
-              'sub': googleUser.id,
-              'display_name': googleUser.displayName,
-            });
+        var result1 = await conn.query(
+          'SELECT * FROM login(@sub, @display_name)',
+          substitutionValues: {
+            'sub': googleUser.id,
+            'display_name': googleUser.displayName,
+          },
+        );
+        var result2 = await conn.query(
+          'SELECT * from get_last_lavage2(@sub);',
+          substitutionValues: {
+            'sub': googleUser.id,
+          },
+        );
+        var result3 = await conn.query(
+          'SELECT * from get_last_mise_a_eau2(@sub);',
+          substitutionValues: {
+            'sub': googleUser.id,
+          },
+        );
         DB.closeConnection(conn);
+        final prefs = await SharedPreferences.getInstance();
+        DateFormat dateformat = DateFormat('yyyy-MM-dd HH:mm');
 
+        List<Map<String, dynamic>> lavages = [];
+        for (var row in result2) {
+          String idEmbarcation = row[0] as String;
+          DateTime? lastLavage =
+              row[1] as DateTime?; // Assuming DateTime for last_lavage
+
+          // Create a map to store the values
+          Map<String, dynamic> lavageMap = {
+            'id_embarcation': idEmbarcation,
+            'last_lavage': lastLavage,
+          };
+
+          // Add the map to the list
+          lavages.add(lavageMap);
+          if (lastLavage != null) {
+            await prefs.setStringList('lastLavage$idEmbarcation',
+                [idEmbarcation, dateformat.format(lastLavage!)]);
+          }else{
+            
+          await prefs.setStringList('lastLavage$idEmbarcation',
+              [idEmbarcation, 'n/a']);
+          }
+        }
+
+        List<Map<String, dynamic>> misesAEau = [];
+        for (var row in result2) {
+          String idEmbarcation = row[0] as String;
+          DateTime? lastMiseEau =
+              row[1] as DateTime?; // Assuming DateTime for last_lavage
+
+          // Create a map to store the values
+          Map<String, dynamic> misesAEauMap = {
+            'id_embarcation': idEmbarcation,
+            'last_mise_eau': lastMiseEau,
+          };
+
+          // Add the map to the list
+          misesAEau.add(misesAEauMap);
+          if (lastMiseEau != null) {
+            await prefs.setStringList('lastMiseEau$idEmbarcation',
+                [idEmbarcation, dateformat.format(lastMiseEau!)]);
+          }else{
+            
+          await prefs.setStringList('lastMiseEau$idEmbarcation',
+              [idEmbarcation, 'n/a']);
+          }
+        }
         List<String> roles = [];
-        for (List<dynamic> sublist in result) {
+        for (List<dynamic> sublist in result1) {
           if (sublist.isNotEmpty) {
             roles.add(sublist[0] as String);
           }
         }
-
-        final prefs = await SharedPreferences.getInstance();
         await prefs.setStringList('roles', roles);
         await prefs.setString('sub', googleUser.id);
         await prefs.setString('prenom', googleUser.displayName ?? 'n/a');

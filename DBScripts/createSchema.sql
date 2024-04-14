@@ -14,6 +14,7 @@ CREATE SEQUENCE serial_lavage START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE serial_embarcation_utilisateur START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE serial_note START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE serial_plan_eau START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE serial_mise_eau START WITH 1 INCREMENT BY 1;
 
 CREATE TYPE type_lavage AS ENUM ('eau chaude avec pression', 'eau froide avec pression', 'eau chaude sans pression, eau froide sans pression');
 CREATE TYPE niveau AS ENUM ('vert','jaune','rouge');
@@ -86,7 +87,8 @@ CREATE TABLE IF NOT EXISTS MiseAEau (
     id_mise_eau pne_id PRIMARY KEY,
     date DATE NOT NULL,
     id_plan_eau pne_id REFERENCES PlanEau(id_plan_eau),
-    id_embarcation_utilisateur pne_id references EmbarcationUtilisateur(id_embarcation_utilisateur)
+    id_embarcation_utilisateur pne_id references EmbarcationUtilisateur(id_embarcation_utilisateur),
+    id_embarcation embarcation_id NOT NULL
 );
 INSERT INTO Role(nom_role, description) VALUES ('Plaisancier','Tout compte par défaut est plaisancier.' ||
                                                               ' Ceci permet de laver une embarcation, faire une mise à l''eau, entre autre');

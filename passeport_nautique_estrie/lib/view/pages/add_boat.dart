@@ -56,7 +56,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
             // Add your specific widgets for the Add Boat Page here
             const SizedBox(height: 30),
             Image.asset(
-              'Assets/boat-license.jpg',
+              'assets/boat-license.jpg',
               width: 280,
             ),
             const SizedBox(height: 10),
@@ -158,7 +158,7 @@ class _AddBoatPageState extends State<AddBoatPage> {
             const SizedBox(height: 20),
             const SizedBox(height: 60),
             Image.asset(
-              'Assets/CREE_Logo - vert.png',
+              'assets/CREE_Logo - vert.png',
               width: 140,
             ),
             TextButton(

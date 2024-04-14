@@ -17,7 +17,9 @@ class ShareBoat extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: SelectableText(
-            'Pour partager votre embarcation, communiquez ce code unique d\'embarcation : $embarcationUtilisateur',
+            'Pour partager votre embarcation, communiquez ce code unique d\'embarcation : $embarcationUtilisateur'
+            '\nfaites attention. La personne ave qui vous partagez votre embarcation pourra voir vos dernières'
+            '\n mise à l\'eau et vos derniers lavages',
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 18.0),
           ),

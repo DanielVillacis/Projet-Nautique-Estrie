@@ -249,3 +249,5 @@ BEGIN
     VALUES (id_embarcation, nom, sub, creer_pne_id('serial_embarcation_utilisateur'));
 END;
 $$;
+
+
