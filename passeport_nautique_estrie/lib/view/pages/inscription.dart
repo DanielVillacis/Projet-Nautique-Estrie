@@ -112,6 +112,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       borderSide: BorderSide(color: Color(0xFF3A7667)),
                     ),
                   ),
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return 'Veuillez entrer un nom';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: descriptionController,
@@ -127,6 +133,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       borderSide: BorderSide(color: Color(0xFF3A7667)),
                     ),
                   ),
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return 'Veuillez entrer une description';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 6,
@@ -145,6 +157,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       borderSide: BorderSide(color: Color(0xFF3A7667)),
                     ),
                   ),
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return 'Veuillez entrer une marque';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 6,
@@ -163,6 +181,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       borderSide: BorderSide(color: Color(0xFF3A7667)),
                     ),
                   ),
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return 'Veuillez entrer un modèle';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 6,

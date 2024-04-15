@@ -19,8 +19,12 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        children: [
+      child: Column(
+    children: <Widget>[
+      Expanded(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
           const DrawerHeader(
             decoration: BoxDecoration(
               color: Color(0xFF3A7667),
@@ -30,12 +34,12 @@ class CustomDrawer extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'Poppins-Bold',
-                fontSize: 24,
+                fontSize: 26,
               ),
             ),
           ),
           ListTile(
-            title: const Text('Mes embarcations'),
+            title: const Text('Mes embarcations', style: TextStyle(fontSize: 18)),
             onTap: () {
               // navigate to the home page
               Navigator.push(
@@ -44,8 +48,9 @@ class CustomDrawer extends StatelessWidget {
               );
             },
           ),
+          const Divider(),
           ListTile(
-            title: const Text('Mes infos'),
+            title: const Text('Mes infos', style: TextStyle(fontSize: 18)),
             onTap: () {
               // navitage to the account page
               Navigator.push(
@@ -54,8 +59,9 @@ class CustomDrawer extends StatelessWidget {
               );
             },
           ),
+          const Divider(),
           ListTile(
-            title: const Text('A propos'),
+            title: const Text('A propos', style: TextStyle(fontSize: 18)),
             onTap: () {
               Navigator.push(
                 context,
@@ -63,8 +69,9 @@ class CustomDrawer extends StatelessWidget {
               );
             },
           ),
+          const Divider(),
           ListTile(
-            title: const Text('Aide'),
+            title: const Text('Aide', style: TextStyle(fontSize: 18)),
             onTap: () {
               // Update navigation to handle drawer item tap
               Navigator.push(
@@ -73,8 +80,9 @@ class CustomDrawer extends StatelessWidget {
               );
             },
           ),
+          const Divider(),
           ListTile(
-            title: const Text('Me déconnecter'),
+            title: const Text('Me déconnecter', style: TextStyle(fontSize: 18)),
             onTap: () {
               FirebaseAuth.instance.signOut();
               Navigator.push(
@@ -83,8 +91,20 @@ class CustomDrawer extends StatelessWidget {
               );
             },
           ),
+          const Expanded(child: SizedBox()),
+          Container(
+            padding: const EdgeInsets.all(80),
+            child: Image.asset(
+              'assets/CREE_Logo - vert.png', // Replace with your logo path
+              width: 140, // Adjust width as needed
+              height: 80, // Adjust height as needed
+            ),
+          ),
         ],
       ),
+      )
+    ],
+    )
     );
   }
 }

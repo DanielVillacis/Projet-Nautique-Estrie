@@ -43,7 +43,7 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const HomePage().appBar(context, 'Mon compte'),
+      appBar: const HomePage().appBar(context, 'Mes infos'),
       body: accountDetails.isEmpty ? _buildLoadingIndicator() : _buildBody(),
     );
   }
@@ -64,9 +64,10 @@ class _AccountPageState extends State<AccountPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                'Mes infos',
+                'Mon Compte',
                 style: TextStyle(
                   fontSize: 24,
+                  fontFamily: 'Poppins-Bold',
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -101,13 +102,19 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 340),
+              const SizedBox(height: 120),
               const Text('Questions?',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Poppins-Light')),
               const Text(
                   'N\'hésitez pas a nous contacter si vous avez des questions à propos de votre compte',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontFamily: 'Poppins-Light', fontWeight: FontWeight.w300)),
+              const SizedBox(height: 140),
+              Image.asset(
+                    'assets/CREE_Logo - vert.png', // Replace with your logo path
+                    width: 240, // Adjust width as needed
+                    height: 80, // Adjust height as needed
+                ),
             ],
           ),
         ),
