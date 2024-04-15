@@ -2,7 +2,7 @@
     <application
         android:label="passeport_nautique_estrie"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/pnelogo">
         <activity
             android:name=".MainActivity"
             android:exported="true"

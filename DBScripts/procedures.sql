@@ -36,7 +36,7 @@ BEGIN
     RETURNING id_embarcation INTO v_id_embarcation;
 
     -- Add the Embarcation to EmbarcationUtilisateur
-    CALL ajouter_embarcation_utilisateur(v_id_embarcation, in_nom, in_sub);
+    CALL ajouter_embarcation_utilisateur(in_sub, v_id_embarcation, in_nom);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -85,7 +85,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE PROCEDURE ajouter_embarcation_utilisateur(
     IN in_sub VARCHAR,
-    IN in_id_embarcation pne_id,
+    IN in_id_embarcation embarcation_id,
     IN in_nom VARCHAR
 )
 LANGUAGE plpgsql
