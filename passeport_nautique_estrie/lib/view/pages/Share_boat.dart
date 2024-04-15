@@ -148,7 +148,7 @@ class _ShareBoatState extends State<ShareBoat> {
                 Container(
                   alignment: Alignment.center,
                   child: const Text(
-                    "Pour partager votre embarcation, communiquez ce code unique d'embarcation. \nFaites attention. La personne avec qui vous partagez votre embarcation pourra voir vos dernières\n mise à l'eau et vos derniers lavages.", 
+                    "Pour partager votre embarcation, communiquez ce code unique d'embarcation. \nFaites attention. La personne avec qui vous partagez votre embarcation pourra voir vos dernières\n mises à l'eau et vos derniers lavages.", 
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
