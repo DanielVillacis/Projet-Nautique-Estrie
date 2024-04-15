@@ -35,19 +35,21 @@ class _AccountPageState extends State<AccountPage> {
         accountDetails = results;
       });
       await connection.close();
-    } catch (e) {}
+    } catch (e) {
+      throw Exception('Failed to load account details');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const HomePage().appBar(context, 'Mes infos'),
+      appBar: const HomePage().appBar(context, 'Mon compte'),
       body: accountDetails.isEmpty ? _buildLoadingIndicator() : _buildBody(),
     );
   }
 
   Widget _buildLoadingIndicator() {
-    return Center(
+    return const Center(
       child: CircularProgressIndicator(), // Or any other loading indicator
     );
   }
@@ -79,7 +81,7 @@ class _AccountPageState extends State<AccountPage> {
                         children: [
                           const Text('Nom', style: TextStyle(fontSize: 18)),
                           Text(accountDetails[0][1],
-                              style: TextStyle(fontSize: 16)),
+                              style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -91,7 +93,7 @@ class _AccountPageState extends State<AccountPage> {
                           Text(
                               DateFormat('yyyy-MM-dd')
                                   .format(accountDetails[0][2]),
-                              style: TextStyle(fontSize: 16)),
+                              style: const TextStyle(fontSize: 16)),
                         ],
                       ),
                       // Add more Rows for more fields
@@ -101,11 +103,11 @@ class _AccountPageState extends State<AccountPage> {
               ),
               const SizedBox(height: 340),
               const Text('Questions?',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Poppins-Light')),
               const Text(
                   'N\'hésitez pas a nous contacter si vous avez des questions à propos de votre compte',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16)),
+                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins-Light', fontWeight: FontWeight.w300)),
             ],
           ),
         ),

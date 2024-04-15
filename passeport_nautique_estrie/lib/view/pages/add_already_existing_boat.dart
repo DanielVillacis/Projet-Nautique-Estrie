@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:passeport_nautique_estrie/view/pages/home.dart';
 import 'package:passeport_nautique_estrie/view/pages/preview.dart';
 
 class AddExistingBoat extends StatefulWidget {
@@ -22,11 +23,7 @@ class _AddExistingBoatState extends State<AddExistingBoat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Partage d\'embarcation'),
-        backgroundColor: const Color(0xFF3A7667),
-        centerTitle: false,
-      ),
+      appBar: const HomePage().appBar(context, "Partage d'embarcation"),
       body: Center(
         // Center the content vertically
         child: SingleChildScrollView(
@@ -40,7 +37,7 @@ class _AddExistingBoatState extends State<AddExistingBoat> {
   Widget addBoatBody(BuildContext context) {
     return Container(
       // Wrap the Column in a Container to center it
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,7 +47,7 @@ class _AddExistingBoatState extends State<AddExistingBoat> {
             style: TextStyle(
               color: Colors.black,
               fontSize: 24,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               fontFamily: 'Poppins-Bold',
             ),
             textAlign: TextAlign.center,
@@ -69,7 +66,7 @@ class _AddExistingBoatState extends State<AddExistingBoat> {
             style: TextStyle(
               color: Colors.black,
               fontSize: 24,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               fontFamily: 'Poppins-Bold',
             ),
             textAlign: TextAlign.center,
@@ -78,7 +75,7 @@ class _AddExistingBoatState extends State<AddExistingBoat> {
           TextField(
             controller: _nomController,
             decoration: const InputDecoration(
-              labelText: "nom de l'embarcation",
+              labelText: "Nom de l'embarcation",
               border: OutlineInputBorder(),
             ),
           ),

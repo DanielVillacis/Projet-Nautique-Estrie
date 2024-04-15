@@ -155,12 +155,12 @@ class _AddBoatPageState extends State<AddBoatPage> {
                 ],
               ),
             ],
-            const SizedBox(height: 20),
-            const SizedBox(height: 60),
-            Image.asset(
-              'assets/CREE_Logo - vert.png',
-              width: 140,
-            ),
+            // const SizedBox(height: 20),
+            // const SizedBox(height: 60),
+            // Image.asset(
+            //   'assets/CREE_Logo - vert.png',
+            //   width: 140,
+            // ),
             TextButton(
               onPressed: () {
                 Navigator.push(
@@ -172,8 +172,8 @@ class _AddBoatPageState extends State<AddBoatPage> {
                 'Ajouter une embarcation déjà enregistrée',
                 style: TextStyle(
                   color: Colors
-                      .blue, // Change the color to blue or any other color you prefer
-                  decoration: TextDecoration.underline, // Underline the text
+                      .black, // Change the color to blue or any other color you prefer
+                  decoration: TextDecoration.none, // Underline the text
                   fontWeight: FontWeight.w700,
                 ),
               ),

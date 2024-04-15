@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
         title,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 26,
+          fontSize: 20,
           fontWeight: FontWeight.w200,
           fontFamily: 'Poppins-Light',
         ),

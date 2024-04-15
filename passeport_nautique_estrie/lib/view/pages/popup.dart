@@ -6,7 +6,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:intl/intl.dart';
 import 'package:passeport_nautique_estrie/db.dart';
 import 'package:passeport_nautique_estrie/scanner.dart';
-import 'package:passeport_nautique_estrie/view/pages/Share_boat.dart';
+import 'package:passeport_nautique_estrie/view/pages/share_boat.dart';
 import 'package:passeport_nautique_estrie/view/pages/embarcation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
