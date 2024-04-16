@@ -27,6 +27,7 @@ class _HelpPageState extends State<HelpPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 40),
                 const Text(
                   'Des Questions?',
                   style: TextStyle(
@@ -58,8 +59,9 @@ class _HelpPageState extends State<HelpPage> {
                       ),
                     ],
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 380),
+                const SizedBox(height: 340),
                 Image.asset(
                     'assets/CREE_Logo - vert.png', // Replace with your logo path
                     width: 240, // Adjust width as needed

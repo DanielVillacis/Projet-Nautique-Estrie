@@ -40,19 +40,7 @@ class _BoatPreviewPageState extends State<BoatPreviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Embarcation',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 26,
-            fontWeight: FontWeight.w200,
-            fontFamily: 'Poppins-Light',
-          ),
-        ),
-        backgroundColor: const Color(0xFF3A7667),
-        centerTitle: false,
-      ),
+      appBar: const HomePage().appBar(context, 'Embarcation'),
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -65,6 +53,32 @@ class _BoatPreviewPageState extends State<BoatPreviewPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget infoLine(String title, String data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            data,
+            textAlign: TextAlign.right, // Align text to the right
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 
@@ -103,55 +117,85 @@ class _BoatPreviewPageState extends State<BoatPreviewPage> {
       ];
     } else {
       return [
-        Text(
-          'Nom: $nom',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
+        Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 255, 251, 241),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  color: Colors.white, // Change this to your desired color
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Passeport Nautique Estrie',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 10, 10, 10),
+                          ),
+                        ),
+                      ),
+                      Image.asset(
+                        'assets/CREE_Logo - vert.png',
+                        height: 50,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      infoLine('Embarcation :', nom,),
+                      const SizedBox(height: 10),
+                      infoLine('Marque :', _embarcationModel.details[0][2]),
+                      const SizedBox(height: 10),
+                      infoLine('Longueur', _embarcationModel.details[0][3].toString()),
+                      const SizedBox(height: 20),
+                      Container(
+                        alignment: Alignment.center,
+                        child: FutureBuilder<String?>(
+                          future:
+                              _embarcationModel.getImageUrl(_embarcationModel.details[0][4]),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return const Text('Error loading image');
+                            } else {
+                              return Image.network(
+                                snapshot.data!,
+                                width: 200,
+                                height: 200,
+                              );
+                            }
+                          },
+                        )
+                      ),
+                    ],
+                  )),
+            ]),
           ),
-        ),
-        const SizedBox(height: 20),
-        FutureBuilder<String?>(
-          future:
-              _embarcationModel.getImageUrl(_embarcationModel.details[0][4]),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return const Text('Error loading image');
-            } else {
-              return Image.network(
-                snapshot.data!,
-                width: 200,
-                height: 200,
-              );
-            }
-          },
-        ),
-        const SizedBox(height: 20),
-        Text(
-          'Longueur: ${_embarcationModel.details[0][3]}',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        Text(
-          'Marque: ${_embarcationModel.details[0][2]}',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        Text(
-          'Description: ${_embarcationModel.details[0][1]}',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
+          const SizedBox(height: 28),
+          ElevatedButton(
           onPressed: () async {
             // Call the addEmbarcationUtilisateur function
             await _embarcationModel.addEmbarcationUtilisateur(
@@ -167,13 +211,13 @@ class _BoatPreviewPageState extends State<BoatPreviewPage> {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF18848C),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
           child: const Text(
-            'Rajouter cette embarcation à mon compte',
+            'Ajouter cette embarcation à mon compte',
             textAlign: TextAlign.center, // Center the text
             style: TextStyle(
               color: Colors.white,
