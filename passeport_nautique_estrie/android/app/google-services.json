@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "30124424543",
+    "project_id": "passeport-nautique-de-l-estrie",
+    "storage_bucket": "passeport-nautique-de-l-estrie.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30124424543:android:8cab8f194694c85050caea",
+        "android_client_info": {
+          "package_name": "com.example.passeport_nautique_estrie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30124424543-7ibp3bk7ubd52hd86v2d15drh9ji46rk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.passeport_nautique_estrie",
+            "certificate_hash": "fb8990e031ea20c1d6e1a481b2513bf32bbd0638"
+          }
+        },
+        {
+          "client_id": "30124424543-cgfft9625ac107139gicqgplpd5qbupe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.passeport_nautique_estrie",
+            "certificate_hash": "ff532889c40a12a9c6ff86dcef796ec02ca10567"
+          }
+        },
+        {
+          "client_id": "30124424543-cl3udcc0n002ppsf1eelbsj74eq88j8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.passeport_nautique_estrie",
+            "certificate_hash": "9c80cb5fc01b0ad19dd55489a386c9a54a5251ba"
+          }
+        },
+        {
+          "client_id": "30124424543-61bglvph5bi9tvhquhrop730ccgolreb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBittwGDcbKwZ4t2yN3SKoelEn94nZYPiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30124424543-61bglvph5bi9tvhquhrop730ccgolreb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "30124424543-1qt01nv40up0k7tnsok0442p40t11mug.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.passeportNautiqueEstrie.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
