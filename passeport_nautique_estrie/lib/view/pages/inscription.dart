@@ -208,7 +208,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     return null; // Return null if validation succeeds
                   },
                   decoration: const InputDecoration(
-                    labelText: 'Longueur (po)',
+                    labelText: 'Longueur (pied)',
                     labelStyle: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
