@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PNE',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Define your app's theme here
       ),
