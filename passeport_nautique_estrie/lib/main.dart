@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PNE',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Define your app's theme here
       ),
