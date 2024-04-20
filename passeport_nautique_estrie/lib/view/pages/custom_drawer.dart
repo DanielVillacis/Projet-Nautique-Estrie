@@ -20,11 +20,7 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
-    children: <Widget>[
-      Expanded(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
+        children: <Widget>[
           const DrawerHeader(
             decoration: BoxDecoration(
               color: Color(0xFF3A7667),
@@ -38,73 +34,77 @@ class CustomDrawer extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
-            title: const Text('Mes embarcations', style: TextStyle(fontSize: 18)),
-            onTap: () {
-              // navigate to the home page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text('Mes infos', style: TextStyle(fontSize: 18)),
-            onTap: () {
-              // navitage to the account page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AccountPage()),
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text('A propos', style: TextStyle(fontSize: 18)),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const InformationPage()),
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text('Aide', style: TextStyle(fontSize: 18)),
-            onTap: () {
-              // Update navigation to handle drawer item tap
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HelpPage()),
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            title: const Text('Me déconnecter', style: TextStyle(fontSize: 18)),
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Login()),
-              );
-            },
-          ),
-          const Expanded(child: SizedBox()),
-          Container(
-            padding: const EdgeInsets.all(80),
-            child: Image.asset(
-              'assets/CREE_Logo - vert.png', // Replace with your logo path
-              width: 140, // Adjust width as needed
-              height: 80, // Adjust height as needed
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                ListTile(
+                  title: const Text('Mes embarcations', style: TextStyle(fontSize: 18)),
+                  onTap: () {
+                    // navigate to the home page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text('Mes infos', style: TextStyle(fontSize: 18)),
+                  onTap: () {
+                    // navitage to the account page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AccountPage()),
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text('A propos', style: TextStyle(fontSize: 18)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const InformationPage()),
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text('Aide', style: TextStyle(fontSize: 18)),
+                  onTap: () {
+                    // Update navigation to handle drawer item tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HelpPage()),
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text('Me déconnecter', style: TextStyle(fontSize: 18)),
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 80), // Adjust spacing as needed
+                Container(
+                  padding: const EdgeInsets.all(80),
+                  child: Image.asset(
+                    'assets/CREE_Logo - vert.png', // Replace with your logo path
+                    width: 140, // Adjust width as needed
+                    height: 80, // Adjust height as needed
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-      )
-    ],
-    )
     );
   }
 }
